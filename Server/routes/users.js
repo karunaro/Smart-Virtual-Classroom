@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
-const User = require("../models/user.model");
+//const auth = require("../middleware/auth");
+const User = require("../models/user");
 // Register
 router.post("/register", async (req, res) => {
 try {
@@ -69,7 +69,7 @@ res.status(500).json({ error: err.message });
 }
 });
 // Delete
-router.delete("/delete", auth, async (req, res) => {
+router.delete("/delete", async (req, res) => {
 try {
 const deletedUser = await User.findByIdAndDelete(req.user);
 res.json(deletedUser);
@@ -91,7 +91,7 @@ return res.json(true);
 res.status(500).json({ error: err.message });
 }
 });
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
 const user = await User.findById(req.user);
 res.json({
 firstname: user.firstname,
