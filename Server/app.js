@@ -4,7 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
+const passport = require("passport");
 require('dotenv').config()
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -14,7 +16,9 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.use(passport.initialize());
+// Passport config
+require("./config/passport")(passport);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,8 +43,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-console.log(process.env.mongoURI)
-mongoose.connect(process.env.mongoURI_ALI, { useUnifiedTopology: true, useNewUrlParser: true })
+console.log(process.env.mongoURI_NEJI)
+mongoose.connect(process.env.mongoURI_NEJI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
