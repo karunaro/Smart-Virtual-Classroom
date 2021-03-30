@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = require('./user').schema
 const Resources = require('./resources').schema
-const Quizz = require('./quizz')
+const Quizz = require('./quizz').schema
 const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({

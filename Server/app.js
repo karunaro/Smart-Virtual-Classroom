@@ -40,7 +40,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 console.log(process.env.mongoURI)
-mongoose.connect(process.env.mongoURI, { useUnifiedTopology: true, useNewUrlParser: true })
+mongoose.connect(process.env.mongoURI_ALI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
