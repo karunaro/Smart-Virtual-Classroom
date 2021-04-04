@@ -100,6 +100,12 @@ export function HeaderMenu({ layoutProps }) {
                         {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
                     </NavLink>
                 </li>
+                <li className={`menu-item menu-item-rel ${getMenuItemActive('/Meetopia')}`}>
+                    <NavLink className="menu-link" to="/Meetopia">
+                        <span className="menu-text">Meetopia</span>
+                        {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
+                    </NavLink>
+                </li>
 
                 {/*end::1 Level*/}
 
