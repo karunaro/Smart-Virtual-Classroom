@@ -5,14 +5,26 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require("mongoose");
 const passport = require("passport");
+var cors = require('cors')
+
 require('dotenv').config()
 
-
+var quizzRouter = require('./routes/quizz');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var meetopiaRouter = require('./routes/meetopia');
+var projectRouter = require('./routes/project');
+var questionsRouter = require('./routes/questions');
+var groupRouter = require('./routes/group');
+var validationsRouter = require('./routes/validations');
+const classesController = require("./routes/classesController");
+const seancesController = require("./routes/seancesController");
+const classesGroupController = require("./routes/classesGroupController");
+const CoursesController = require("./routes/coursesController");
 
 var app = express();
-
+ 
+app.use(cors())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -26,7 +38,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/Quizzes', quizzRouter);
 app.use('/users', usersRouter);
+app.use('/Meetopia', meetopiaRouter);
+app.use('/project', projectRouter);
+app.use('/questions', questionsRouter);
+app.use('/groups', groupRouter);
+app.use('/validations', validationsRouter);
+app.use("/class", classesController);
+app.use("/seance", seancesController);
+app.use("/classesGroup", classesGroupController);
+app.use("/course", CoursesController);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

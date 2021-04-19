@@ -31,7 +31,7 @@ export function UserProfileDropdown() {
               {user.fullname}
             </span>
             <span className="symbol symbol-35">            
-              <span className="symbol-label text-white font-size-h5 font-weight-bold bg-white-o-30">{user.fullname[0]}</span>
+              <span className="symbol-label text-white font-size-h5 font-weight-bold bg-white-o-30">{user.firstname}</span>
             </span>
           </div>
         </Dropdown.Toggle>
