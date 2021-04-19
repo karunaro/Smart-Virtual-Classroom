@@ -31,7 +31,7 @@ import {MetronicI18nProvider} from "./_metronic/i18n";
  *
  * @see https://facebook.github.io/create-react-app/docs/using-the-public-folder
  */
-const { PUBLIC_URL } = process.env;
+const { REACT_APP_BACKEND_IP, REACT_APP_BACKEND_PORT, REACT_APP_BACKEND_PROTOCOL, PUBLIC_URL } = process.env;
 
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
@@ -39,7 +39,7 @@ const { PUBLIC_URL } = process.env;
  *
  * @see https://github.com/ctimmerm/axios-mock-adapter
  */
-/* const mock = */ _redux.mockAxios(axios);
+/* const mock = */ //_redux.mockAxios(axios);
 
 /**
  * Inject metronic interceptors for axios.
@@ -47,6 +47,9 @@ const { PUBLIC_URL } = process.env;
  * @see https://github.com/axios/axios#interceptors
  */
 _redux.setupAxios(axios, store);
+
+console.log('im in the indexjs file: ' + REACT_APP_BACKEND_IP + ' PORT: ' + REACT_APP_BACKEND_PORT
+ + ' protocol: ' + REACT_APP_BACKEND_PROTOCOL + ' localportreact: ' + process.env.REACT_APP_FRONTEND_PORT)
 
 ReactDOM.render(
   <MetronicI18nProvider>

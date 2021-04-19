@@ -8,6 +8,10 @@ import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
+import CreateClassesGroup from "../../../../../components/CreateClassesGroup/CreateClassesGroup";
+import CreateClass from "../../../../../components/CreateClass/CreateClass";
+import CreateSeance from "../../../../../components/CreateSeance/CreateSeance";
+import CreateCourses from "../../../../../components/CreateCourses/CreateCourses";
 
 export function QuickActionsDropdown() {
   const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");
@@ -15,160 +19,85 @@ export function QuickActionsDropdown() {
   const layoutProps = useMemo(() => {
     return {
       offcanvas:
-        objectPath.get(uiService.config, "extras.quick-actions.layout") ===
-        "offcanvas",
+          objectPath.get(uiService.config, "extras.quick-actions.layout") ===
+          "offcanvas",
     };
   }, [uiService]);
 
   return (
-    <>
-      {layoutProps.offcanvas && (
-        <OverlayTrigger
-          placement="left"
-          overlay={<Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>}
-        >
-          <div className="topbar-item">
-            <div
-              className="btn btn-icon btn-clean btn-dropdown btn-lg mr-1"
-              id="kt_quick_actions_toggle"
+      <>
+        {layoutProps.offcanvas && (
+            <OverlayTrigger
+                placement="left"
+                overlay={<Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>}
             >
+              <div className="topbar-item">
+                <div
+                    className="btn btn-icon btn-clean btn-dropdown btn-lg mr-1"
+                    id="kt_quick_actions_toggle"
+                >
               <span className="svg-icon svg-icon-xl svg-icon-primary">
                 <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/Media/Equalizer.svg")}
+                    src={
+                      process.env.PUBLIC_URL +
+                      "/media/svg/icons/Files/File-plus.svg"
+                    }
                 />
               </span>
-            </div>
-          </div>
-        </OverlayTrigger>
-      )}
-      {!layoutProps.offcanvas && (
-        <Dropdown drop="down" alignRight>
-          <Dropdown.Toggle
-            as={DropdownTopbarItemToggler}
-            id="kt_quick_actions_panel_toggle"
-          >
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>
-              }
-            >
-              <div className="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
-                <span className="svg-icon svg-icon-xl">
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/Media/Equalizer.svg")}
-                  />
-                </span>
+                </div>
               </div>
             </OverlayTrigger>
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu className="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
-            <form>
-              {/* begin: Head */}
-              <div
-                className="d-flex flex-column align-items-center justify-content-center pt-10 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
-                style={{ backgroundImage: `url(${bgImage})` }}
+        )}
+        {!layoutProps.offcanvas && (
+            <Dropdown drop="down" alignRight>
+              <Dropdown.Toggle
+                  as={DropdownTopbarItemToggler}
+                  id="kt_quick_actions_panel_toggle"
               >
-                <h3 className="text-white font-weight-bold font-size-5">
-                  Quick Actions
-                </h3>
-                <span className="btn btn-success btn-sm btn-bold btn-font-md mt-2">
-                  23 tasks pending
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="quick-actions-tooltip">Class Management</Tooltip>
+                    }
+                >
+                  <div className="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
+                <span className="svg-icon svg-icon-xl">
+                  <SVG
+                      src={
+                        process.env.PUBLIC_URL +
+                        "/media/svg/icons/Files/File-plus.svg"
+                      }
+                  />
                 </span>
-              </div>
-              {/* end: Head */}
+                  </div>
+                </OverlayTrigger>
+              </Dropdown.Toggle>
 
-              <div className="row row-paddingless">
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-right border-bottom"
+              <Dropdown.Menu className="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+                <form>
+                  {/* begin: Head */}
+                  <div
+                      className="d-flex flex-column align-items-center justify-content-center pt-10 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
+                      style={{ backgroundImage: `url(${bgImage})` }}
                   >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Shopping/Euro.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Accounting
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      eCommerce
-                    </span>
-                  </a>
-                </div>
+                    <h3 className="text-white font-weight-bold font-size-5">
+                      Class Management
+                    </h3>
+                  </div>
+                  {/* end: Head */}
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-bottom"
-                  >
-                    {" "}
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Communication/Mail-attachment.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Administration
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Console
-                    </span>
-                  </a>
-                </div>
+                  <div className="row row-paddingless">
+                    <CreateClassesGroup></CreateClassesGroup>
+                    <CreateClass></CreateClass>
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-right"
-                  >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Shopping/Box2.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Projects
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Pending Tasks
-                    </span>
-                  </a>
-                </div>
+                    <CreateSeance></CreateSeance>
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light"
-                  >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Communication/Group.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Customers
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Latest cases
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </form>
-          </Dropdown.Menu>
-        </Dropdown>
-      )}
-    </>
+                    <CreateCourses></CreateCourses>
+                  </div>
+                </form>
+              </Dropdown.Menu>
+            </Dropdown>
+        )}
+      </>
   );
 }

@@ -1,6 +1,6 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { put, takeLatest } from "redux-saga/effects";
+import {call, put, takeLatest } from "redux-saga/effects";
 import { getUserByToken } from "./authCrud";
 
 export const actionTypes = {
@@ -33,6 +33,7 @@ export const reducer = persistReducer(
       }
 
       case actionTypes.Logout: {
+        localStorage.clear();
         // TODO: Change this code. Actions in reducer aren't allowed.
         return initialAuthState;
       }
@@ -72,8 +73,11 @@ export function* saga() {
   });
 
   yield takeLatest(actionTypes.UserRequested, function* userRequested() {
-    const { data: user } = yield getUserByToken();
-
+    console.log("yuild before");
+    const user =yield call(getUserByToken);
+    console.log(user);
+    
+ 
     yield put(actions.fulfillUser(user));
   });
 }

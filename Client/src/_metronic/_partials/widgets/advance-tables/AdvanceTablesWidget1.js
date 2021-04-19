@@ -2,14 +2,7 @@
 import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../_helpers";
-import {
-  Button,
-  Modal,
-  ButtonToolbar,
-  Col,
-  Container,
-  Row
-} from "react-bootstrap";
+
 import ModalGroup from '../../../../components/ModalGroup'
 export function AdvanceTablesWidget1({ className }) {
   return (

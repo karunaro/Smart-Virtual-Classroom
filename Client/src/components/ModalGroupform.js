@@ -1,27 +1,61 @@
 
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import React, {useEffect, useState} from 'react';
 
-const GreenCheckbox = withStyles({
+import axios from "axios";
+import {useHistory} from "react-router-dom";
+
+import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+
+import Avatar from '@material-ui/core/Avatar';
+
+
+const useStyles = makeStyles(theme => ({
     root: {
-        color: green[400],
-        '&$checked': {
-            color: green[600],
-        },
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
     },
-    checked: {},
-})(props => <Checkbox color="default" {...props} />);
+    close: {
+        padding: theme.spacing(0.5),
+    },
+}));
 
 export default function ModelGroupform() {
-    const [state, setState] = React.useState({
+    const [user,setuser]= useState([])
+    useEffect(()=>{
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/allstudent`)
+            .then(res => {
+                console.log(res.data)
+                setuser(res.data)
+
+            })
+            .catch(err => {
+                console.log(err)})
+    },[])
+    const history = useHistory();
+    console.log(history.location.pathname.split('/')[2])
+
+    const [open, setOpen] = React.useState(false);
+
+    function handleClick() {
+        setOpen(true);
+    }
+
+    function handleClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    }
+  /*  const [state, setState] = React.useState({
         checkedA: true,
         checkedB: true,
         checkedF: true,
@@ -30,45 +64,63 @@ export default function ModelGroupform() {
 
     const handleChange = name => event => {
         setState({ ...state, [name]: event.target.checked });
-    };
+    };*/
+    const classes = useStyles();
+
+
+
 
     return (
-        <FormGroup >
 
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={state.checkedA}
-                        onChange={handleChange('checkedA')}
-                        value="checkedA"
-                        color="primary"
-                    />
-                }
-                label="Ali harrath "
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={state.checkedB}
-                        onChange={handleChange('checkedB')}
-                        value="checkedB"
-                        color="primary"
-                    />
-                }
-                label="khaled fajraoui "
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={state.checkedC}
-                        onChange={handleChange('checkedC')}
-                        value="checkedC"
-                        color="primary"
-                    />
-                }
-                label="Maysa habbachi "
-            />
+    <List dense className={classes.root}>
+        {user.map((user,index) => {
+            const labelId = `checkbox-list-secondary-label-${index}`;
+            return (
+                <ListItem onClickCapture={handleClick} key={index} button onClick={  ()=>{ axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/groups/addmember/`+history.location.pathname.split('/')[2]+'/'+user._id)}} >
 
-        </FormGroup>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={open}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id"> student added ! </span>}
+                        action={[
+
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                className={classes.close}
+                                onClick={handleClose}
+                            >
+                                <CloseIcon />
+                            </IconButton>,
+                        ]}
+                    />
+                    <ListItemAvatar>
+                        <Avatar
+                            alt={`Avatar n°${index + 1}`}
+                            src={`/static/images/avatar/${index + 1}.jpg`}
+                        />
+                    </ListItemAvatar>
+                    <ListItemText id={labelId} primary={user.firstname +' '+ user.lastname} />
+                    <ListItemSecondaryAction>
+                       Click to affect!
+                    </ListItemSecondaryAction>
+
+                </ListItem>
+
+            );
+
+        })}
+
+    </List>
+
     );
 }

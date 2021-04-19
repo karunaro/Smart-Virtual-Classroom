@@ -5,8 +5,11 @@ import {toAbsoluteUrl} from "../../../../_metronic/_helpers";
 import {ContentRoute} from "../../../../_metronic/layout"
 import Login from "./Login";
 import Registration from "./Registration";
+import RegistrationProf from "./RegistrationProf";
 import ForgotPassword from "./ForgotPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
+import ResetPw from "./ResetPw";
+
 
 export function AuthPage() {
   return (
@@ -21,7 +24,7 @@ export function AuthPage() {
             <div
                 className="login-aside d-flex flex-row-auto bgi-size-cover bgi-no-repeat p-10 p-lg-10"
                 style={{
-                  backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.jpg")})`
+                  backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-10.jpg")})`
                 }}
             >
               {/*begin: Aside Container*/}
@@ -30,8 +33,8 @@ export function AuthPage() {
                 <Link to="/" className="flex-column-auto mt-5">
                   <img
                       alt="Logo"
-                      className="max-h-70px"
-                      src={toAbsoluteUrl("/media/logos/logo-letter-1.png")}
+                      className="max-h-90px"
+                      src={toAbsoluteUrl("/media/logos/logo-dark5.png")}
                   />
                 </Link>
                 {/* end:: Aside header */}
@@ -39,31 +42,20 @@ export function AuthPage() {
                 {/* start:: Aside content */}
                 <div className="flex-column-fluid d-flex flex-column justify-content-center">
                   <h3 className="font-size-h1 mb-5 text-white">
-                    Welcome to Metronic!
+                    Welcome to Edutopia!
                   </h3>
                   <p className="font-weight-lighter text-white opacity-80">
-                    The ultimate Bootstrap & React 16 admin theme framework for next
-                    generation web apps.
+                    Leaders grow here
                   </p>
                 </div>
                 {/* end:: Aside content */}
 
                 {/* start:: Aside footer for desktop */}
                 <div className="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
-                  <div className="opacity-70 font-weight-bold	text-white">
+                  {/* <div className="opacity-70 font-weight-bold	text-white">
                     &copy; 2020 Metronic
-                  </div>
-                  <div className="d-flex">
-                    <Link to="/terms" className="text-white">
-                      Privacy
-                    </Link>
-                    <Link to="/terms" className="text-white ml-10">
-                      Legal
-                    </Link>
-                    <Link to="/terms" className="text-white ml-10">
-                      Contact
-                    </Link>
-                  </div>
+                  </div> */}
+               
                 </div>
                 {/* end:: Aside footer for desktop */}
               </div>
@@ -75,8 +67,9 @@ export function AuthPage() {
             <div className="flex-row-fluid d-flex flex-column position-relative p-7 overflow-hidden">
               {/*begin::Content header*/}
               <div className="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10">
-                <span className="font-weight-bold text-dark-50">Don't have an account yet?</span>
+                
                 <Link to="/auth/registration" className="font-weight-bold ml-2" id="kt_login_signup">Sign Up!</Link>
+                <Link to="/auth/RegistrationProf" className="font-weight-bold ml-2" id="kt_login_signup">Sign Up As Professor!</Link>
               </div>
               {/*end::Content header*/}
 
@@ -85,9 +78,14 @@ export function AuthPage() {
                 <Switch>
                 <ContentRoute path="/auth/login" component={Login}/>
                 <ContentRoute path="/auth/registration" component={Registration}/>
+                <ContentRoute path="/auth/RegistrationProf" component={RegistrationProf}/>
                 <ContentRoute
                     path="/auth/forgot-password"
                     component={ForgotPassword}
+                />
+                  <ContentRoute
+                    path="/auth/reset"
+                    component={ResetPw}
                 />
                 <Redirect from="/auth" exact={true} to="/auth/login"/>
                 <Redirect to="/auth/login"/>

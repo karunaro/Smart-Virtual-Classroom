@@ -1,13 +1,9 @@
 import {
-    Button,
-    Modal,
-    ButtonToolbar,
-    Col,
-    Container,
-    Row
+    Modal
 } from "react-bootstrap";
 import React from "react";
 import ModalGroupform from './ModalGroupform'
+import Button from '@material-ui/core/Button';
 export default class ModalGroup extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -31,8 +27,9 @@ export default class ModalGroup extends React.Component {
     render() {
         return (
             <>
-                <Button variant="primary" onClick={this.handleShow}>
-                    Affect student to this Group
+
+                <Button variant="outlined" color="primary" onClick={this.handleShow}>
+                    Assigned Projects
                 </Button>
 
                 <Modal show={this.state.show} onHide={this.handleClose}>
@@ -46,9 +43,7 @@ export default class ModalGroup extends React.Component {
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
-                            Affect
-                        </Button>
+
                     </Modal.Footer>
                 </Modal>
             </>

@@ -17,10 +17,33 @@ const useStyles = makeStyles(theme => ({
         width: 350,
         height: 230,
         overflow: 'auto',
+
+    },
+    Todo: {
+        fontSize: theme.typography.pxToRem(55),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+        color : "aqua",
+        paddingInline: 100,
+    },
+    Doing: {
+        fontSize: theme.typography.pxToRem(55),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+        color : "aqua",
+        paddingInline: 500,
+    },
+    Done: {
+        fontSize: theme.typography.pxToRem(20),
+        flexBasis: '33.33%',
+        flexShrink: 0,
+        color : "aqua",
+        paddingInline: 1050,
     },
     button: {
         margin: theme.spacing(0.5, 0),
     },
+
 }));
 
 function not(a, b) {
@@ -31,7 +54,7 @@ function intersection(a, b) {
     return a.filter(value => b.indexOf(value) !== -1);
 }
 
-export default function TransferList() {
+export default function TaskBoard(questions) {
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState([0, 1, 2, 7]);
@@ -40,7 +63,7 @@ export default function TransferList() {
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
     const centerChecked = intersection(checked, center);
-
+console.log(questions)
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value);
@@ -65,17 +88,26 @@ export default function TransferList() {
     };
 
     const handleCheckedRight = () => {
-        setRight(right.concat(leftChecked));
+        setRight(right.concat(centerChecked));
+        setCenter(not(center, centerChecked));
+        setChecked(not(checked, centerChecked));
+    };
+
+    const handleCheckedCenter = () => {
+        setCenter(center.concat(leftChecked));
         setLeft(not(left, leftChecked));
         setChecked(not(checked, leftChecked));
     };
-
     const handleCheckedLeft = () => {
-        setLeft(left.concat(rightChecked));
+        setLeft(left.concat(centerChecked));
+        setCenter(not(center, centerChecked));
+        setChecked(not(checked, centerChecked));
+    };
+    const handleCheckedCenterReverse = () => {
+        setCenter(center.concat(rightChecked));
         setRight(not(right, rightChecked));
         setChecked(not(checked, rightChecked));
     };
-
     const handleAllCenterReverse = () => {
         setCenter(center.concat(right));
         setRight([]);
@@ -87,6 +119,7 @@ export default function TransferList() {
 
     const customList = items => (
         <>
+
         <Paper className={classes.paper}>
 
             <List dense component="div" role="list">
@@ -108,7 +141,7 @@ export default function TransferList() {
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`Task ${value + 1}`} />
+                            <ListItemText id={labelId}  primary={`Task ${value + 1}`} />
                         </ListItem>
 
                     );
@@ -120,6 +153,9 @@ export default function TransferList() {
     );
 
     return (
+        <>
+
+
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
             <Grid item>{customList(left)}</Grid>
             <Grid item>
@@ -138,7 +174,7 @@ export default function TransferList() {
                         variant="outlined"
                         size="small"
                         className={classes.button}
-                        onClick={handleCheckedRight}
+                        onClick={handleCheckedCenter}
                         disabled={leftChecked.length === 0}
                         aria-label="move selected right"
                     >
@@ -149,7 +185,7 @@ export default function TransferList() {
                         size="small"
                         className={classes.button}
                         onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0}
+                        disabled={centerChecked.length === 0}
                         aria-label="move selected left"
                     >
                         &lt;
@@ -184,7 +220,7 @@ export default function TransferList() {
                         size="small"
                         className={classes.button}
                         onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0}
+                        disabled={centerChecked.length === 0}
                         aria-label="move selected right"
                     >
                         &gt;
@@ -193,7 +229,7 @@ export default function TransferList() {
                         variant="outlined"
                         size="small"
                         className={classes.button}
-                        onClick={handleCheckedLeft}
+                        onClick={handleCheckedCenterReverse}
                         disabled={rightChecked.length === 0}
                         aria-label="move selected left"
                     >
@@ -214,7 +250,7 @@ export default function TransferList() {
             <Grid item>{customList(right)}</Grid>
 
         </Grid>
-
+</>
     );
 
 }

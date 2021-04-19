@@ -3,10 +3,10 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { useHistory } from "react-router-dom";
 import {toAbsoluteUrl} from "../../../../_helpers";
-
+import {useSelector} from "react-redux";
 export function QuickUser() {
   const history = useHistory();
-
+  const user = useSelector(state => state.auth.user);
   const logoutClick = () => {
       const toggle = document.getElementById("kt_quick_user_toggle");
       if (toggle) {
@@ -39,9 +39,7 @@ export function QuickUser() {
                 className="symbol symbol-100 mr-5"
             >
               <div className="symbol-label" style={{
-                backgroundImage: `url(${toAbsoluteUrl(
-                    "/media/users/300_21.jpg"
-                )})`
+                backgroundImage: `url(${user.image})`
               }}/>
               <i className="symbol-badge bg-success"/>
             </div>
