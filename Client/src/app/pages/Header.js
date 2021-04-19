@@ -86,14 +86,14 @@ export function HeaderMenu({ layoutProps }) {
                         {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
                     </NavLink>
                 </li>
-                <li className={`menu-item menu-item-rel ${getMenuItemActive('/group')}`}>
-                    <NavLink className="menu-link" to="/Group">
-                        <span className="menu-text">Create Admin</span>
+                <li className={`menu-item menu-item-rel ${getMenuItemActive('/admins')}`}>
+                    <NavLink className="menu-link" to="/admins">
+                        <span className="menu-text"> Admins</span>
                         {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
                     </NavLink>
                 </li>
                 <li className={`menu-item menu-item-rel ${getMenuItemActive('/group')}`}>
-                    <NavLink className="menu-link" to="/Group">
+                    <NavLink className="menu-link" to="/Professors">
                         <span className="menu-text">Professors</span>
                         {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
                     </NavLink>
@@ -186,24 +186,6 @@ export function HeaderMenu({ layoutProps }) {
                         <span className="menu-text">Group</span>
                         {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
                     </NavLink>
-                </li>
-                <li
-                data-menu-toggle={layoutProps.menuDesktopToggle}
-                aria-haspopup="true"
-                className={`menu-item menu-item-submenu menu-item-rel ${getMenuItemActive('/MyQuizzes')}`}>
-                <NavLink className="menu-link menu-toggle" to="/MyQuizzes">
-                    <span className="menu-text">Quizz</span>
-                    <i className="menu-arrow"></i>
-                </NavLink>
-                <div className="menu-submenu menu-submenu-classic menu-submenu-left">
-                    <ul className="menu-subnav">
-                        <li className={`menu-item ${getMenuItemActive('/My Quizzes')}`}>
-                            <NavLink className="menu-link" to="/MyQuizzes">
-                                <span className="menu-text">My Quizzes</span>
-                            </NavLink>
-                        </li>
-                    </ul>
-                </div>
                 </li>
                 <li className={`menu-item menu-item-rel ${getMenuItemActive('/Meetopia')}`}>
                     <NavLink className="menu-link" to="/Meetopia">

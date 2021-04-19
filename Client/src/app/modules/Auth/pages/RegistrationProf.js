@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { connect } from "react-redux";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
-import { register } from "../_redux/authCrud";
+import { register_professor } from "../_redux/authCrud";
 import swal from 'sweetalert';
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import {  Button,TextField, InputAdornment, IconButton } from '@material-ui/core';
+
 const initialValues = {
   firstname: "",
   email: "",
@@ -19,7 +20,9 @@ const initialValues = {
   acceptTerms: false,
 };
 
-function Registration(props) {
+function RegistrationProf(props) {
+    const [isRequested, setIsRequested] = useState(false);
+    
   const { intl } = props;
   const [loading, setLoading] = useState(false);
   const RegistrationSchema = Yup.object().shape({
@@ -102,14 +105,15 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
     onSubmit: (values, { setStatus, setSubmitting }) => {
       enableLoading();
       console.log("aa");
-      register( values.firstname, values.lastname,values.email, values.password,values.changepassword)
+      register_professor( values.firstname, values.lastname,values.email, values.password,values.changepassword)
         .then(({ data: { token } }) => {
           console.log(token);
-          localStorage.setItem("jwtToken", token);
+          
+        
             disableLoading();
-            props.login(token);
-            console.log("vv");
-          disableLoading();
+            swal("success!", "please check your email ", "success");
+            setIsRequested(true);
+         
         })
         .catch((err) => {
           setSubmitting(false);
@@ -117,6 +121,7 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
           {
             swal("error!", err.response.data.email , "error");
           }
+          setIsRequested(false);
           setStatus(
             intl.formatMessage({
               id: "AUTH.VALIDATION.INVALID_LOGIN",
@@ -128,10 +133,14 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
   });
 
   return (
+    <>
+      {isRequested && <Redirect to="/auth" />}
+
+      {!isRequested && (
     <div className="login-form login-signin" style={{ display: "block" }}>
       <div className="text-center mb-10 mb-lg-20">
         <h3 className="font-size-h1">
-          <FormattedMessage id="AUTH.REGISTER.TITLE" />
+          <FormattedMessage id="AUTH.REGISTER.TITLE" /> AS Professor
         </h3>
         <p className="text-muted font-weight-bold">
           Enter your details to create your account
@@ -325,7 +334,9 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
         </div>
       </form>
     </div>
+    )}
+    </>
   );
 }
 
-export default injectIntl(connect(null, auth.actions)(Registration));
+export default injectIntl(connect(null, auth.actions)(RegistrationProf));

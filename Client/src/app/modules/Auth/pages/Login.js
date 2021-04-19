@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {  Button,TextField, InputAdornment, IconButton } from '@material-ui/core';
+import {  Button,TextField,Input, InputAdornment, IconButton } from '@material-ui/core';
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
@@ -10,8 +10,11 @@ import { login,loginGmail } from "../_redux/authCrud";
 import {GoogleLogin} from 'react-google-login';
 import Icon from './icon';
 import useStyles from './style';
+import swal from 'sweetalert';
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
+
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -23,8 +26,8 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 */
 
 const initialValues = {
-  email: "nejii@esprit.com",
-  password: "ghzouani",
+  email: "",
+  password: "",
 };
 const initialState = {
   email: '',
@@ -39,6 +42,7 @@ function Login(props) {
   //const dispatch = useDispatch();
   //const history = useHistory();
   const classes = useStyles();
+ 
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -115,13 +119,13 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
         
     } catch (err) {
         
-        alert('Google Sign In was unsuccessful. Try again later'); 
-        
+         
+        swal("error", "Google Sign In was unsuccessful. Try again later" , "error");
     }
 }
 
 
-  const googleError = () => alert('Google Sign In was unsuccessful. Try again later');
+  const googleError = () => alert('Google Sign Inn was unsuccessful. Try again later');
   const getInputClasses = (fieldname) => {
     if (formik.touched[fieldname] && formik.errors[fieldname]) {
       return "is-invalid";
@@ -148,7 +152,13 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
             props.login(token);
             console.log("vv");
           })
-          .catch(() => {
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.professorNA)
+            if (err.response.data.professorNA)
+            {
+              swal(err.response.data.professorNA, "please check your email" , "error");
+            }
             disableLoading();
             setSubmitting(false);
             setStatus(
@@ -186,8 +196,8 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
         ) : (
           <div className="mb-10 alert alert-custom alert-light-info alert-dismissible">
             <div className="alert-text ">
-              Use account <strong>admin@demo.com</strong> and password{" "}
-              <strong>demo</strong> to continue.
+              Use your account 
+               to continue.
             </div>
           </div>
         )}
@@ -209,7 +219,8 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
           ) : null}
         </div>
         <div className="form-group fv-plugins-icon-container">
-          <TextField
+          <TextField 
+          
             placeholder="Password"
             type={showPassword ? 'text' : 'password'}
             
@@ -218,7 +229,9 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
             )}`}
             name="password"
             {...formik.getFieldProps("password")}
-            InputProps={{ // <-- This is where the toggle button is added.
+            InputProps={
+              { // <-- This is where the toggle button is added.
+                disableUnderline: true,
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton

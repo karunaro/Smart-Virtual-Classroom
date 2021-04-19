@@ -8,12 +8,13 @@ import {DashboardPage} from "./pages/DashboardPage";
 import {GroupPage} from "./pages/GroupPage";
 import { ViewMeetopias } from "./pages/Meetopia/ViewMeetopias";
 import { MyQuizzes } from "./pages/Quizz/MyQuizzes";
-import { TakeQuizz } from "./pages/Quizz/TakeQuizz";
 import { NewQuizzPage } from "./pages/Quizz/NewQuizzPage";
 import {ValidationsPage} from "./pages/ValidationsPage";
 import {QuestionsPage} from "./pages/QuestionsPage";
 import {Allgroups} from "./pages/Allgroups";
 import {ProjectsPage} from "./pages/ProjectsPage";
+import {ProfessorsPage} from "./pages/ProfessorsPage";
+import {AdminsPage} from "./pages/AdminsPage";
 
 
 import ListCLassesGroup from "../components/ListCLassesGroup";
@@ -47,10 +48,11 @@ export default function BasePage() {
                 <ContentRoute path="/Meetopia" component={MeetopiaPage}/>
                 <ContentRoute path="/MyMeetopias" component={ViewMeetopias}/>
                 <ContentRoute path="/MyQuizzes" component={MyQuizzes}/>
-                <ContentRoute path="/TakeQuizz" component={TakeQuizz}/>
                 <ContentRoute path="/CreateNewQuizz" component={NewQuizzPage}/>
                 <ContentRoute path="/allgroups" component={Allgroups}/>
                 <ContentRoute path="/group" component={GroupPage}/>
+                <ContentRoute path="/professors" component={ProfessorsPage}/>
+                <ContentRoute path="/admins" component={AdminsPage}/>
                 <ContentRoute path="/projects" component={ProjectsPage}/>
                 <ContentRoute path="/validations" component={ValidationsPage}/>
                 <ContentRoute path="/questions" component={QuestionsPage}/>

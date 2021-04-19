@@ -11,6 +11,7 @@ var nodemailer = require("nodemailer");
 var async = require("async");
 var crypto = require("crypto");
 
+
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
@@ -28,6 +29,84 @@ router.use(cors());
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
+let multer = require("multer");
+
+const DIR = "./public/uploads/";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, DIR);
+  },
+  filename: (req, file, cb) => {
+      const fileName = file.originalname.toLowerCase().split(' ').join('-');
+      cb(null, Date.now()+ '-' + fileName)
+  }
+});
+
+var upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+      if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+          cb(null, true);
+      } else {
+          cb(null, false);
+          return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+      }
+  }
+});
+router.post('/user-profile',  (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host')
+  console.log(req.body)
+  const img=req.body.image;
+  
+  User.findOne({ _id: req.body._id }, function(err, user) {
+    if (!user) {
+      res.status(401).json("email n'existe pas")
+    }
+    console.log("x")
+    console.log(img)
+    user.image = img;
+
+    user
+    .save()
+    .then(res.status(200).json(user) , console.log(user))
+    .catch(err => console.log(err));
+  });
+
+})
+router.post("/findimage/:email", (req, res) => {
+  var x = true
+
+
+  User.findOne({email: req.params.email}, (err, c) => {
+
+      if(c)
+          res.json(c.image)
+      else
+          res.status(401).json(' Introuvable')
+  });
+
+})
+
+// UPLOAD
+
+router.post("/upload", upload.single('image'), (req, res, next) => {
+  const reqFiles = "";
+  const url = process.env.BACKEND_PROTOCOL + "://" + req.get("host");
+  if (req.files) {
+    
+      reqFiles=process.env.BACKEND_PROTOCOL + process.env.BACKEND_IP + ':' + process.env.PORT +  "/uploads/" + req.files.filename;
+    
+  }
+
+  res.status(201).json({
+    msg: "Done upload!",
+    success: true,
+    result: {
+      reqFiles,
+    },
+  });
+});
 router.post("/register_professor", (req, res) => {
     // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -44,7 +123,8 @@ router.post("/register_professor", (req, res) => {
           lastname: req.body.lastname,
           email: req.body.email,
           password: req.body.password,
-          role:  "professor"  
+          role:  "professor" ,
+          etat: false  
         });
   // Hash password before saving in database
         bcrypt.genSalt(10, (err, salt) => {
@@ -53,7 +133,79 @@ router.post("/register_professor", (req, res) => {
             newUser.password = hash;
             newUser
               .save()
-              .then(user => res.json(user))
+              .then(user => {
+                const payload = {
+                  id: user.id,
+                  firsname: user.firstname
+                };
+                jwt.sign(
+                  payload,
+                  process.env.secretOrKey,
+                  {
+                    expiresIn: 31556926 // 1 year in seconds
+                  },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
+                
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  });
+  router.post("/register_admin", (req, res) => {
+    console.log(req.body)
+    // Form validation
+  const { errors, isValid } = validateRegisterInput(req.body);
+  // Check validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+  User.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        return res.status(400).json({ email: "Email already exists" });
+      } else {
+        const newUser = new User({
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          password: req.body.password,
+          role:  "admin" ,
+         
+        });
+  // Hash password before saving in database
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                const payload = {
+                  id: user.id,
+                  firsname: user.firstname
+                };
+                jwt.sign(
+                  payload,
+                  process.env.secretOrKey,
+                  {
+                    expiresIn: 31556926 // 1 year in seconds
+                  },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
+                
+              })
               .catch(err => console.log(err));
           });
         });
@@ -85,7 +237,26 @@ router.post("/register_professor", (req, res) => {
             newUser.password = hash;
             newUser
               .save()
-              .then(user => res.json(user))
+              .then(user => {
+                const payload = {
+                  id: user.id,
+                  firsname: user.firstname
+                };
+                jwt.sign(
+                  payload,
+                  process.env.secretOrKey,
+                  {
+                    expiresIn: 31556926 // 1 year in seconds
+                  },
+                  (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  }
+                );
+                
+              })
               .catch(err => console.log(err));
           });
         });
@@ -113,6 +284,13 @@ router.post("/login", (req, res) => {
   // Check password
       bcrypt.compare(password, user.password).then(isMatch => {
         if (isMatch) {
+          if(user.etat == !true && user.role =="professor")
+          {
+            return res
+            .status(402)
+            .json({ professorNA: "Not Approved Professor" });
+
+          }
           // User matched
           // Create JWT Payload
           const payload = {
@@ -146,11 +324,21 @@ router.post("/login", (req, res) => {
         res.json(u)    })
 
 })
-router.get("/allprofessor",  (req, res) => {
-  User.find({role:"professor"}, (err, u) => {
+router.get("/alladmin",  (req, res) => {
+  User.find({role:"admin"}, (err, u) => {
       res.json(u)    })
 
 })
+router.get("/allprofessor",  (req, res) => {
+  User.find({$and:[{role:"professor"},{ etat:{$ne: true} }]}
+  , (err, u) => {
+      res.json(u)    })
+
+})
+router.delete('/:id', async function(req, res, next) {
+  console.log(req.params.id)
+  res.send(await Group.findByIdAndDelete(req.params.id));
+});
 router.get("/nbStudent",  (req, res) => {
   User.find({role:"student"}, (err, u) => {
       res.json(u.length);
@@ -235,6 +423,45 @@ router.post('/reset', (req, res) =>{
   });
 }
 );
+router.post('/changePWD',  (req, res) => {
+  console.log(req.body);
+  
+  const password = req.body.password;
+  const newpassword = req.body.newpassword;
+     User.findOne({_id: req.body._id}).then(user => {
+      // Check if user exists
+      if (!user) {
+        return res.status(404).json({ emailnotfound: "Email not found" });
+      }
+  // Check password
+      bcrypt.compare(password, user.password).then(isMatch => {
+        if (isMatch) {
+          // User matched
+          // Change psw
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(newpassword, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user
+                .save()
+                .then(res.status(200).json("c bon"))
+                .catch(err => console.log(err));
+                
+            });
+          });
+  
+          
+        } else {
+          return res
+            .status(400)
+            .json({ passwordincorrect: "Password incorrect" });
+        }
+      });
+    });  }
+  
+
+);
+
 router.post('/accepter', function(req, res, next) {
   User.findOne({email: req.body.email} , function (err,u) {
       async.waterfall([
@@ -301,7 +528,7 @@ router.post('/google_login', async (req, res) => {
       console.log({tokenId});
       const verify = await client.verifyIdToken({idToken: tokenId, audience: process.env.googleClientID})
       console.log(verify);
-      const {email_verified, email, given_name,family_name} = verify.payload
+      const {email_verified, email, given_name,family_name,picture} = verify.payload
       console.log ({email_verified, email, given_name,family_name});
 
       const password = email + process.env.google_secret
@@ -338,29 +565,33 @@ router.post('/google_login', async (req, res) => {
           
       }else{
           const newUser = new User({
-              firstname: given_name,lastname:family_name, email, password: passwordHash,
+              firstname: given_name,lastname:family_name, email, password: passwordHash,image:picture,
           })
-          console.log("ffff"+newUser);
+          console.log("ffff");
+          console.log(newUser);
 
-          await newUser.save().then(user => res.json(user))
+          await newUser.save().then(user => {
+            const payload = {
+              id: user.id,
+              firsname: user.firstname
+            };
+            jwt.sign(
+              payload,
+              process.env.secretOrKey,
+              {
+                expiresIn: 31556926 // 1 year in seconds
+              },
+              (err, token) => {
+                res.json({
+                  success: true,
+                  token: "Bearer " + token
+                });
+              }
+            );
+            
+          })
           .catch(err => console.log(err));
-          const payload = {
-            id: newUser.id,
-            firsname: newUser.firstname
-          };
-          jwt.sign(
-            payload,
-            process.env.secretOrKey,
-            {
-              expiresIn: 31556926 // 1 year in seconds
-            },
-            (err, token) => {
-              res.json({
-                success: true,
-                token: "Bearer " + token
-              });
-            }
-          );
+        
 
           
       }

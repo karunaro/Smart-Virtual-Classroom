@@ -16,12 +16,16 @@ export function login(email, password ) {
 
 export function register( firstname, lastname,email, password, password2) {
 
-  console.log(axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/register", {  firstname, lastname,email, password , password2}).then(response => {
-    console.log("Success ========>", response);
-})
-.catch(err => { if(err.request){ console.log(err.request) } if(err.response){ console.log(err.response) } }));
+  
   
   return axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/register", {  firstname, lastname,email, password , password2});
+  
+}
+export function register_professor( firstname, lastname,email, password, password2) {
+
+  
+  
+  return axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/register_professor", {  firstname, lastname,email, password , password2});
   
 }
 
