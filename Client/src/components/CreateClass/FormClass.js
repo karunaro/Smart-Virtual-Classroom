@@ -1,5 +1,7 @@
 import {
   Button,
+  Input,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
@@ -98,10 +100,12 @@ function FormClass() {
         />
 
         <Select
+          className="select"
           value={selectedItem}
           onChange={handleChangeSelect}
           input={<OutlinedInput name="Groupe" id="outlined-age-simple" />}
         >
+    
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
