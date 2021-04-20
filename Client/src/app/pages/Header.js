@@ -77,26 +77,6 @@ export function HeaderMenu({ layoutProps }) {
 
                         </ul>
                     </div></li>
-                <li className={`menu-item menu-item-rel ${getMenuItemActive('/djh')}`}>
-                    <NavLink className="menu-link" to="/azfj">
-                        <span className="menu-text">Quizzes</span>
-                        {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
-                    </NavLink>
-                </li>
-                <li className={`menu-item menu-item-rel ${getMenuItemActive('/admins')}`}>
-                    <NavLink className="menu-link" to="/admins">
-                        <span className="menu-text"> Admins</span>
-                        {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
-                    </NavLink>
-                </li>
-                <li className={`menu-item menu-item-rel ${getMenuItemActive('/group')}`}>
-                    <NavLink className="menu-link" to="/Professors">
-                        <span className="menu-text">Professors</span>
-                        {layoutProps.rootArrowEnabled && (<i className="menu-arrow"/>)}
-                    </NavLink>
-                    
-                </li>
-
                 <li
                 data-menu-toggle={layoutProps.menuDesktopToggle}
                 aria-haspopup="true"

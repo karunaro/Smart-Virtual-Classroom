@@ -15,7 +15,7 @@ import {Allgroups} from "./pages/Allgroups";
 import {ProjectsPage} from "./pages/ProjectsPage";
 import {ProfessorsPage} from "./pages/ProfessorsPage";
 import {AdminsPage} from "./pages/AdminsPage";
-
+import { useSelector } from "react-redux";
 
 import ListCLassesGroup from "../components/ListCLassesGroup";
 import ListCLasses from "../components/ListClasses";
@@ -30,6 +30,7 @@ const ECommercePage = lazy(() =>
 );
 
 export default function BasePage() {
+    const user = useSelector((state) => state.auth.user);
     // useEffect(() => {
     //   console.log('Base page');
     // }, []) // [] - is required if you need only one call
@@ -42,6 +43,17 @@ export default function BasePage() {
                     /* Redirect from root URL to /dashboard. */
                     <Redirect exact from="/" to="/dashboard"/>
                 }
+                {user.role === "admin" ? (
+                    <Switch>
+                    
+                    <ContentRoute path="/professors" component={ProfessorsPage}/>
+
+                <ContentRoute path="/admins" component={AdminsPage}/>
+                </Switch>) : (
+                    <Switch>
+
+               
+
                 <ContentRoute path="/dashboard" component={DashboardPage}/>
                 <ContentRoute path="/builder" component={BuilderPage}/>
                 <ContentRoute path="/my-page" component={MyPage}/>
@@ -51,8 +63,7 @@ export default function BasePage() {
                 <ContentRoute path="/CreateNewQuizz" component={NewQuizzPage}/>
                 <ContentRoute path="/allgroups" component={Allgroups}/>
                 <ContentRoute path="/group" component={GroupPage}/>
-                <ContentRoute path="/professors" component={ProfessorsPage}/>
-                <ContentRoute path="/admins" component={AdminsPage}/>
+                
                 <ContentRoute path="/projects" component={ProjectsPage}/>
                 <ContentRoute path="/validations" component={ValidationsPage}/>
                 <ContentRoute path="/questions" component={QuestionsPage}/>
@@ -64,7 +75,8 @@ export default function BasePage() {
                 <ContentRoute path="/DetailCourses" component={insideClass} />
 
                 <Route path="/google-material" component={GoogleMaterialPage}/>
-                
+                </Switch>
+                )}
                 <Route path="/e-commerce" component={ECommercePage}/>
                 <Redirect to="error/error-v1"/>
             </Switch>
