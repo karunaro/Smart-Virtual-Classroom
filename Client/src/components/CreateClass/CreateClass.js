@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function CreateClass(props) {
   const location = useLocation();
   const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");

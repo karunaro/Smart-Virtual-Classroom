@@ -11,15 +11,22 @@ import Typography from "@material-ui/core/Typography";
 import CardActionArea from "@material-ui/core/CardActionArea";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getclassesGroup } from "../redux/Slices/classesGroup";
+import {
+  getAllProfessors,
+  getclassesGroup,
+  getclassesGroupForProfessor,
+} from "../redux/Slices/classesGroup";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
 import {
+  Avatar,
   Button,
+  CardHeader,
   Container,
   Grid,
+  GridList,
   IconButton,
   Menu,
   MenuItem,
@@ -30,6 +37,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import EditCLassesGroup from "./EditCLassesGroup/EditCLassesGroup";
 import DeleteclassGroup from "./CreateClassesGroup/DeleteclassGroup";
+import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
 const useStyles = makeStyles({
   card: {
@@ -45,6 +53,7 @@ export default function ListCLassesGroup() {
   const [expanded, setExpanded] = React.useState(false);
   const classesGroup = useSelector((state) => state.classesGroup.list);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const userConnected = JSON.parse(localStorage.getItem("user"));
 
   const open = Boolean(anchorEl);
   function handleClick(event) {
@@ -54,13 +63,22 @@ export default function ListCLassesGroup() {
   function handleClose() {
     setAnchorEl(null);
   }
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getclassesGroup());
+    if (userConnected.role === "admin") {
+      dispatch(getclassesGroup());
+    }
+    if (userConnected.role === "professor") {
+      dispatch(getclassesGroupForProfessor(userConnected._id));
+    }
+
+    dispatch(getAllProfessors());
   }, [dispatch]);
 
-  const handleURL = (id) => {
+  const handleURL = (id, idOwner) => {
     localStorage.setItem("classGroupURL", id);
+    localStorage.setItem("idOwner", idOwner);
   };
 
   function handleExpandClick() {
@@ -73,7 +91,44 @@ export default function ListCLassesGroup() {
         {classesGroup.map((c, index) => (
           <Grid item xs={3}>
             <Card className={classes.card} key={index}>
-              <Link onClick={() => handleURL(c._id)} to="/classes">
+              <CardHeader
+                avatar={
+                  <Avatar
+                    aria-label="Recipe"
+                    src={c.idOwner.image}
+                    className={classes.avatar}
+                  ></Avatar>
+                }
+                action={
+                  userConnected.role === "admin" ? (
+                    <>
+                      <GridList cellHeight={150} className={classes.gridList}>
+                        <DeleteclassGroup
+                          idGroup={c._id}
+                          name={c.name}
+                        ></DeleteclassGroup>
+                        <EditCLassesGroup
+                          idGroup={c._id}
+                          name={c.name}
+                        ></EditCLassesGroup>
+                      </GridList>
+                    </>
+                  ) : (
+                    <></>
+                  )
+                }
+                subheader={
+                  <>
+                    <b>{c.idOwner.email}</b>
+                    <br />
+                    <ReactTimeAgo date={c.dateCreation} locale="en-US" />
+                  </>
+                }
+              />
+              <Link
+                onClick={() => handleURL(c._id, c.idOwner._id)}
+                to="/classes"
+              >
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -88,16 +143,6 @@ export default function ListCLassesGroup() {
                   </CardContent>
                 </CardActionArea>
               </Link>
-              <CardActions>
-                <DeleteclassGroup
-                  idGroup={c._id}
-                  name={c.name}
-                ></DeleteclassGroup>
-                <EditCLassesGroup
-                  idGroup={c._id}
-                  name={c.name}
-                ></EditCLassesGroup>
-              </CardActions>
             </Card>
           </Grid>
         ))}

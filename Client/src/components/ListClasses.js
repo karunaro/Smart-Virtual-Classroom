@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getClassesByIdGroup } from "../redux/Slices/classes";
+import {
+  getClassesByIdGroup,
+  getClassesByIdGroupAndIdProf,
+} from "../redux/Slices/classes";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -42,11 +45,22 @@ const useStyles = makeStyles({
 });
 function ListClasses() {
   const Listclasses = useSelector((state) => state.classes.classByGroup);
+  const userConnected = JSON.parse(localStorage.getItem("user"));
 
   console.log(Listclasses);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getClassesByIdGroup(localStorage.getItem("classGroupURL")));
+    if (userConnected.role === "admin") {
+      dispatch(getClassesByIdGroup(localStorage.getItem("classGroupURL")));
+    }
+    if (userConnected.role === "professor") {
+      const obj = {
+        idGroup: localStorage.getItem("classGroupURL"),
+        idProf: userConnected._id,
+      };
+      console.log(obj);
+      dispatch(getClassesByIdGroupAndIdProf(obj));
+    }
   }, [localStorage.getItem("classGroupURL")]);
 
   const classes = useStyles();
@@ -73,12 +87,19 @@ function ListClasses() {
                   ></Avatar>
                 }
                 action={
-                  <>
-                    <GridList cellHeight={150} className={classes.gridList}>
-                      <EditCLass idClass={c._id}></EditCLass>
-                      <DeleteClass idClass={c._id} name={c.name}></DeleteClass>
-                    </GridList>
-                  </>
+                  userConnected.role === "admin" ? (
+                    <>
+                      <GridList cellHeight={150} className={classes.gridList}>
+                        <EditCLass idClass={c._id}></EditCLass>
+                        <DeleteClass
+                          idClass={c._id}
+                          name={c.name}
+                        ></DeleteClass>
+                      </GridList>
+                    </>
+                  ) : (
+                    <></>
+                  )
                 }
                 subheader={
                   <ReactTimeAgo date={c.dateCreation} locale="en-US" />

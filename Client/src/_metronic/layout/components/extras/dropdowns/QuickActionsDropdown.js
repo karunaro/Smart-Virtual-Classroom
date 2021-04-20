@@ -16,88 +16,97 @@ import CreateCourses from "../../../../../components/CreateCourses/CreateCourses
 export function QuickActionsDropdown() {
   const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");
   const uiService = useHtmlClassService();
+  const userConnected = JSON.parse(localStorage.getItem("user"));
   const layoutProps = useMemo(() => {
     return {
       offcanvas:
-          objectPath.get(uiService.config, "extras.quick-actions.layout") ===
-          "offcanvas",
+        objectPath.get(uiService.config, "extras.quick-actions.layout") ===
+        "offcanvas",
     };
   }, [uiService]);
 
   return (
-      <>
-        {layoutProps.offcanvas && (
-            <OverlayTrigger
-                placement="left"
-                overlay={<Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>}
+    <>
+      {layoutProps.offcanvas && (
+        <OverlayTrigger
+          placement="left"
+          overlay={<Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>}
+        >
+          <div className="topbar-item">
+            <div
+              className="btn btn-icon btn-clean btn-dropdown btn-lg mr-1"
+              id="kt_quick_actions_toggle"
             >
-              <div className="topbar-item">
-                <div
-                    className="btn btn-icon btn-clean btn-dropdown btn-lg mr-1"
-                    id="kt_quick_actions_toggle"
-                >
               <span className="svg-icon svg-icon-xl svg-icon-primary">
                 <SVG
+                  src={
+                    process.env.PUBLIC_URL +
+                    "/media/svg/icons/Files/File-plus.svg"
+                  }
+                />
+              </span>
+            </div>
+          </div>
+        </OverlayTrigger>
+      )}
+      {!layoutProps.offcanvas && (
+        <Dropdown drop="down" alignRight>
+          <Dropdown.Toggle
+            as={DropdownTopbarItemToggler}
+            id="kt_quick_actions_panel_toggle"
+          >
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="quick-actions-tooltip">Class Management</Tooltip>
+              }
+            >
+              <div className="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
+                <span className="svg-icon svg-icon-xl">
+                  <SVG
                     src={
                       process.env.PUBLIC_URL +
                       "/media/svg/icons/Files/File-plus.svg"
                     }
-                />
-              </span>
-                </div>
-              </div>
-            </OverlayTrigger>
-        )}
-        {!layoutProps.offcanvas && (
-            <Dropdown drop="down" alignRight>
-              <Dropdown.Toggle
-                  as={DropdownTopbarItemToggler}
-                  id="kt_quick_actions_panel_toggle"
-              >
-                <OverlayTrigger
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id="quick-actions-tooltip">Class Management</Tooltip>
-                    }
-                >
-                  <div className="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
-                <span className="svg-icon svg-icon-xl">
-                  <SVG
-                      src={
-                        process.env.PUBLIC_URL +
-                        "/media/svg/icons/Files/File-plus.svg"
-                      }
                   />
                 </span>
-                  </div>
-                </OverlayTrigger>
-              </Dropdown.Toggle>
+              </div>
+            </OverlayTrigger>
+          </Dropdown.Toggle>
 
-              <Dropdown.Menu className="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
-                <form>
-                  {/* begin: Head */}
-                  <div
-                      className="d-flex flex-column align-items-center justify-content-center pt-10 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
-                      style={{ backgroundImage: `url(${bgImage})` }}
-                  >
-                    <h3 className="text-white font-weight-bold font-size-5">
-                      Class Management
-                    </h3>
-                  </div>
-                  {/* end: Head */}
+          <Dropdown.Menu className="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg">
+            <form>
+              {/* begin: Head */}
+              <div
+                className="d-flex flex-column align-items-center justify-content-center pt-10 pb-10 bgi-size-cover bgi-no-repeat rounded-top"
+                style={{ backgroundImage: `url(${bgImage})` }}
+              >
+                <h3 className="text-white font-weight-bold font-size-5">
+                  Class Management
+                </h3>
+              </div>
+              {/* end: Head */}
 
-                  <div className="row row-paddingless">
+              <div className="row row-paddingless">
+                {userConnected.role === "admin" ? (
+                  <>
                     <CreateClassesGroup></CreateClassesGroup>
                     <CreateClass></CreateClass>
-
+                  </>
+                ) : userConnected.role === "professor" ? (
+                  <>
                     <CreateSeance></CreateSeance>
 
                     <CreateCourses></CreateCourses>
-                  </div>
-                </form>
-              </Dropdown.Menu>
-            </Dropdown>
-        )}
-      </>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </form>
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
+    </>
   );
 }

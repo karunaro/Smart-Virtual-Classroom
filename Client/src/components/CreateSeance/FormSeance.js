@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSeances, getseancesByIdClass } from "../../redux/Slices/seances";
 import { makeStyles } from "@material-ui/core/styles";
-import { getClasses } from "../../redux/Slices/classes";
+import { getClasses, getClassesByIdGroupAndIdProf } from "../../redux/Slices/classes";
 import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,11 +32,17 @@ const useStyles = makeStyles((theme) => ({
 function FormSeance() {
   const classes = useStyles();
   const [Name, SetName] = useState("");
-  const classess = useSelector((state) => state.classes.list);
+  const classess = useSelector((state) => state.classes.classByGroup);
+  const userConnected = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getClasses());
+    const obj = {
+      idGroup: localStorage.getItem("classGroupURL"),
+      idProf: userConnected._id,
+    };
+    console.log(obj);
+    dispatch(getClassesByIdGroupAndIdProf(obj));
   }, [dispatch]);
 
   const handleChangeName = (e) => {

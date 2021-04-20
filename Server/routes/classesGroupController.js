@@ -7,6 +7,22 @@ let classesGroup = require("../models/classesGroup");
 router.get("/", (req, res) => {
   classesGroup
     .find({})
+    .populate("idOwner")
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ success: false, msg: `Something went wrong. ${err}` });
+    });
+});
+
+// READ (ALL) PROFESSOR
+router.get("/professor/:id", (req, res) => {
+  classesGroup
+    .find({ idOwner: req.params.id })
+    .populate("idOwner")
     .then((result) => {
       res.json(result);
     })
@@ -21,6 +37,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   classesGroup
     .findById(req.params.id)
+    .populate("idOwner")
     .then((result) => {
       res.json(result);
     })
@@ -31,12 +48,14 @@ router.get("/:id", (req, res) => {
 
 // ADD
 router.post("/", (req, res) => {
-  console.log(req.body);
+  console.log(req.body.idOwner);
+
   let newclassesGroup = new classesGroup({
-    idOwner: 2,
+    idOwner: req.body.idOwner,
     name: req.body.name,
     dateCreation: Date.now(),
   });
+  console.log(newclassesGroup);
   newclassesGroup
     .save()
     .then((result) => {
@@ -59,10 +78,10 @@ router.post("/", (req, res) => {
             .json({ success: false, msg: err.errors.name.message });
           return;
         }
-        if (err.errors.dateCreation) {
+        if (err.errors.idOwner) {
           res
             .status(400)
-            .json({ success: false, msg: err.errors.dateCreation.message });
+            .json({ success: false, msg: err.errors.idOwner.message });
           return;
         }
 
@@ -97,7 +116,7 @@ router.delete("/:id", (req, res) => {
 
 router.put("/:id", (req, res) => {
   let updatedclassesGroup = {
-    idOwner: 2,
+    idOwner: req.body.idOwner,
     name: req.body.name,
     dateCreation: Date.now(),
   };

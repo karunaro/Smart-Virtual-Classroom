@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 var classesSchema = new mongoose.Schema({
   idProf: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
   },
   idGroup: {
     type: mongoose.Schema.Types.ObjectId,

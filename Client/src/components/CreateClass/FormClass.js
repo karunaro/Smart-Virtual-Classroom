@@ -1,5 +1,7 @@
 import {
   Button,
+  Input,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
@@ -35,7 +37,7 @@ function FormClass() {
   const [Name, SetName] = useState("");
   const [Section, SetSection] = useState("");
   const groupes = useSelector((state) => state.classesGroup.list);
-
+  const idOwner = localStorage.getItem("idOwner");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getclassesGroup());
@@ -73,6 +75,7 @@ function FormClass() {
   const addclass = () => {
     const classes = {
       name: Name,
+      idProf: idOwner,
       section: Section,
       idGroup: selectedItem,
     };
@@ -97,10 +100,12 @@ function FormClass() {
         />
 
         <Select
+          className="select"
           value={selectedItem}
           onChange={handleChangeSelect}
           input={<OutlinedInput name="Groupe" id="outlined-age-simple" />}
         >
+    
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
