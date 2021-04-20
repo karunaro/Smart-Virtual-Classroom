@@ -35,7 +35,7 @@ function FormClass() {
   const [Name, SetName] = useState("");
   const [Section, SetSection] = useState("");
   const groupes = useSelector((state) => state.classesGroup.list);
-
+  const idOwner = localStorage.getItem("idOwner");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getclassesGroup());
@@ -73,6 +73,7 @@ function FormClass() {
   const addclass = () => {
     const classes = {
       name: Name,
+      idProf: idOwner,
       section: Section,
       idGroup: selectedItem,
     };

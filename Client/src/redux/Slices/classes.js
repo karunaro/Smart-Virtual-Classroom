@@ -2,7 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const getClasses = createAsyncThunk("classes/getClasses", async () => {
-  const { data } = await axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class");
+  const { data } = await axios.get(
+    process.env.REACT_APP_BACKEND_PROTOCOL +
+      process.env.REACT_APP_BACKEND_IP +
+      ":" +
+      process.env.REACT_APP_BACKEND_PORT +
+      "/class"
+  );
 
   return data;
 });
@@ -11,7 +17,30 @@ export const getClassesByIdGroup = createAsyncThunk(
   "classes/getClassesByIdGroup",
   async (idGroup) => {
     const { data } = await axios.get(
-        process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class/findByIdGroup/" + idGroup
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/class/findByIdGroup/" +
+        idGroup
+    );
+
+    return data;
+  }
+);
+
+export const getClassesByIdGroupAndIdProf = createAsyncThunk(
+  "classes/getClassesByIdGroupAndIdProf",
+  async (obj) => {
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/class/findByIdGroupAndOwner/" +
+        obj.idGroup +
+        "/" +
+        obj.idProf
     );
 
     return data;
@@ -22,7 +51,14 @@ export const Addclasses = createAsyncThunk(
   "classes/Addclasses",
   async (classes) => {
     const promise = await axios
-      .post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class/", classes)
+      .post(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/class/",
+        classes
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -45,7 +81,14 @@ export const GetClaseesById = createAsyncThunk(
   "class/GetClaseesById",
   async (Id) => {
     const promise = await axios
-      .get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class/" + Id)
+      .get(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/class/" +
+          Id
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -70,7 +113,15 @@ export const Editclasses = createAsyncThunk(
     //console.log(seanceId);
 
     const promise = await axios
-      .put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class/" + classes._id, classes)
+      .put(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/class/" +
+          classes._id,
+        classes
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -94,7 +145,14 @@ export const Deleteclasses = createAsyncThunk(
 
   async (Id) => {
     const promise = await axios
-      .delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/class/" + Id)
+      .delete(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/class/" +
+          Id
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -156,6 +214,9 @@ export const classesSlice = createSlice({
       state.classById = action.payload;
     },
     [getClassesByIdGroup.fulfilled]: (state, action) => {
+      state.classByGroup = action.payload;
+    },
+    [getClassesByIdGroupAndIdProf.fulfilled]: (state, action) => {
       state.classByGroup = action.payload;
     },
 

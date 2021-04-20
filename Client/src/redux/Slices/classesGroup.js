@@ -4,7 +4,44 @@ import axios from "axios";
 export const getclassesGroup = createAsyncThunk(
   "classesGroup/getclassesGroup",
   async () => {
-    const { data } = await axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/classesGroup");
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/classesGroup"
+    );
+
+    return data;
+  }
+);
+
+export const getclassesGroupForProfessor = createAsyncThunk(
+  "classesGroup/getclassesGroupForProfessor",
+  async (id) => {
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/classesGroup/professor/" +
+        id
+    );
+
+    return data;
+  }
+);
+
+export const getAllProfessors = createAsyncThunk(
+  "classesGroup/getAllProfessors",
+  async () => {
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/users/allprofessor"
+    );
 
     return data;
   }
@@ -14,7 +51,14 @@ export const AddclassesGroup = createAsyncThunk(
   "classesGroup/AddclassesGroup",
   async (classesGroup) => {
     const promise = await axios
-      .post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/classesGroup/", classesGroup)
+      .post(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/classesGroup/",
+        classesGroup
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -37,7 +81,14 @@ export const GetclassesGroupById = createAsyncThunk(
   "classesGroup/GetclassesGroupById",
   async (Id) => {
     const promise = await axios
-      .get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/classesGroup/" + Id)
+      .get(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/classesGroup/" +
+          Id
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -63,7 +114,12 @@ export const EditclassesGroup = createAsyncThunk(
 
     const promise = await axios
       .put(
-          process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/classesGroup/" + classesGroup._id,
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/classesGroup/" +
+          classesGroup._id,
         classesGroup
       )
 
@@ -89,7 +145,14 @@ export const DeleteclassesGroup = createAsyncThunk(
 
   async (Id) => {
     const promise = await axios
-      .delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/classesGroup/" + Id)
+      .delete(
+        process.env.REACT_APP_BACKEND_PROTOCOL +
+          process.env.REACT_APP_BACKEND_IP +
+          ":" +
+          process.env.REACT_APP_BACKEND_PORT +
+          "/classesGroup/" +
+          Id
+      )
 
       .then((response) => {
         console.log("this is response");
@@ -123,6 +186,7 @@ export const classesGroupSlice = createSlice({
     status: null,
     classesGroupById: null,
     classeGroupURL: null,
+    listProfessors: null,
   },
   extraReducers: {
     [getclassesGroup.pending]: (state, action) => {
@@ -134,6 +198,13 @@ export const classesGroupSlice = createSlice({
     },
     [getclassesGroup.rejected]: (state, action) => {
       state.status = "failed";
+    },
+    [getclassesGroupForProfessor.fulfilled]: (state, { payload }) => {
+      state.list = payload;
+      state.status = "success";
+    },
+    [getAllProfessors.fulfilled]: (state, { payload }) => {
+      state.listProfessors = payload;
     },
     [AddclassesGroup.fulfilled]: (state, action) => {
       state.list.push(action.payload.result);

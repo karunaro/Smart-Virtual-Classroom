@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 var classesGroupSchema = new mongoose.Schema({
   idOwner: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
   },
   name: {
     type: String,

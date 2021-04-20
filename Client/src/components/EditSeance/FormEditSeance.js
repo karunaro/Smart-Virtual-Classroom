@@ -8,7 +8,10 @@ import {
 import React, { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getClasses } from "../../redux/Slices/classes";
+import {
+  getClasses,
+  getClassesByIdGroupAndIdProf,
+} from "../../redux/Slices/classes";
 
 import {
   Editseances,
@@ -22,8 +25,8 @@ import EditIcon from "@material-ui/icons/Edit";
 function FormEditSeance(props) {
   const { id } = useParams();
   const [Name, SetName] = useState("");
-
-  const classes = useSelector((state) => state.classes.list);
+  const userConnected = JSON.parse(localStorage.getItem("user"));
+  const classes = useSelector((state) => state.classes.classByGroup);
 
   const dispatch = useDispatch();
   const handleChangeName = (e) => {
@@ -53,7 +56,12 @@ function FormEditSeance(props) {
         SetSelectedItem(response.payload.idClasses);
       }
     );
-    dispatch(getClasses());
+    const obj = {
+      idGroup: localStorage.getItem("classGroupURL"),
+      idProf: userConnected._id,
+    };
+    console.log(obj);
+    dispatch(getClassesByIdGroupAndIdProf(obj));
   }, [localStorage.getItem("seanceURL")]);
 
   const handleChangeSelect = async (e) => {

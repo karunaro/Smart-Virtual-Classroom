@@ -7,6 +7,7 @@ let classes = require("../models/classes");
 router.get("/", (req, res) => {
   classes
     .find({})
+    .populate("idProf")
     .then((result) => {
       res.json(result);
     })
@@ -21,6 +22,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   classes
     .findById(req.params.id)
+    .populate("idProf")
     .then((result) => {
       res.json(result);
     })
@@ -33,6 +35,20 @@ router.get("/:id", (req, res) => {
 router.get("/findByIdGroup/:id", (req, res) => {
   classes
     .find({ idGroup: req.params.id })
+    .populate("idProf")
+    .then((result) => {
+      success: true, res.json(result);
+    })
+    .catch((err) => {
+      res.status(404).json({ success: false, msg: `No such course.` });
+    });
+});
+
+// READ (ONE WITH ID-Group AND ID-OWNER)
+router.get("/findByIdGroupAndOwner/:id/:idProf", (req, res) => {
+  classes
+    .find({ idGroup: req.params.id, idProf: req.params.idProf })
+    .populate("idProf")
     .then((result) => {
       success: true, res.json(result);
     })
@@ -45,7 +61,7 @@ router.get("/findByIdGroup/:id", (req, res) => {
 router.post("/", (req, res) => {
   console.log(req.body);
   let newClass = new classes({
-    idProf: 2,
+    idProf: req.body.idProf,
     idGroup: req.body.idGroup,
     name: req.body.name,
     section: req.body.section,
@@ -121,7 +137,7 @@ router.delete("/:id", (req, res) => {
 
 router.put("/:id", (req, res) => {
   let updatedclass = {
-    idProf: 2,
+    idProf: req.body.idProf,
     idGroup: req.body.idGroup,
     name: req.body.name,
     section: req.body.section,
