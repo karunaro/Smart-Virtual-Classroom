@@ -335,6 +335,12 @@ router.get("/allprofessor",  (req, res) => {
       res.json(u)    })
 
 })
+router.get("/allprofessors",  (req, res) => {
+  User.find({$and:[{role:"professor"},{ etat: true }]}
+  , (err, u) => {
+      res.json(u)    })
+
+})
 router.delete('/:id', async function(req, res, next) {
   console.log(req.params.id)
   res.send(await Group.findByIdAndDelete(req.params.id));
