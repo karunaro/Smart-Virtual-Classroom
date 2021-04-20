@@ -9,8 +9,15 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
-
+import AddAnswer from '../components/AddAnswer';
 import { useHistory} from "react-router-dom";
+import Popover from '@material-ui/core/Popover'
+import Button from '@material-ui/core/Button';
+
+import ModalAddQuestion from '../components/ModalAddQuestion';
+import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
+import {useSelector} from "react-redux";
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -30,64 +37,130 @@ const useStyles = makeStyles(theme => ({
 
 export default function  QuestionsGroup () {
 
-  //   const [questions,setquestion]= useState([])
-    const [group,setgroup]= useState({questions: []})
-    useEffect(()=>console.log(group),[group])
-    useEffect(()=>{
-        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/groups/questions/` + history.location.pathname.split('/')[2])
+    const [questions, setquestion] = useState([])
+    //const [group,setgroup]= useState({questions: []})
+    useEffect(() => console.log(questions), [questions])
+    useEffect(() => {
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + `/questions/`)
             .then(res => {
                 console.log(res)
-                setgroup(res.data)
-    })
+                setquestion(res.data)
+            })
             .catch(err => {
-            console.log(err)})
-    },[])
+                console.log(err)
+            })
+    }, [])
 
 
     const classes = useStyles();
-    const history = useHistory();
-    console.log(history.location.pathname.split('/')[2])
-console.log(group.questions)
+    const result = useSelector(state => state.auth.user)
+    console.log(result.username)
+    //const history = useHistory();
+    // console.log(history.location.pathname.split('/')[2])
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
-        return (
-<>
+    function handleClick(event) {
+        setAnchorEl(event.currentTarget);
 
-        <List className={classes.root}>
-
-            {group.questions.map( (question,index) =>
-                <ListItem key={index} alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={question.answer}
-                        secondary={
-                            <React.Fragment >
-                                <Typography
-                                    component="span"
-                                    variant="body2"
-
-                                    color="textPrimary"
-                                >
-
-                                </Typography>
-                                {question.question}
-                                <div className="d-flex justify-content-end">
-
-                                    {/*    <AddAnswer questionid={question._id} onChange={(answer)=>setgroup( (oldstate)=> {...oldstate.questions , answer: oldstate.questions.answer= answer}  )} ></AddAnswer>
-*/}
-                                </div>
-                            </React.Fragment>
-                        }
-                    />
-
-                </ListItem>)}
-            <Divider variant="inset" component="li"/>
-            </List>
-    {/*   <div className="d-flex justify-content-end"> <ModalAddQuestion onChange={(newquestions)=>setquestion(newquestions.data)} userid={1} ></ModalAddQuestion></div>
-    */}</>
-        );
     }
 
+    function handleClose() {
+        setAnchorEl(null);
+    }
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    if (result.role === 'professor' || result.role === 'admin') {
+        return (
+            <>
+                
+                <List className={classes.root}>
+
+                    {questions.map((question, index) =>
+                        <ListItem key={index} alignItems="flex-start">
+                            <ListItemAvatar>
+                                <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={ "The Question :" + question.question}
+                                secondary={
+                                    <React.Fragment>
+                                        <Typography
+                                            component="span"
+                                            variant="body1"
+
+                                            color="primary"
+                                        >
+                                            { "The Answer :  "  + question.answer }
+                                        </Typography>
+
+                                        <br/>
+                                        <span className="text-muted font-weight-bold">
+                  Posted {" "}
+                                            <ReactTimeAgo date={question.date} locale="en-US"/>
+                </span>
+                                        <div className="d-flex justify-content-end" key={index}>
 
 
+                                            <AddAnswer questionid={question._id}
+                                                       onChange={(answer) => setquestion((oldstate) => [{
+                                                           ...oldstate[index],
+                                                           question: oldstate[index].answer = answer
+                                                       }, ...oldstate].slice(1))}></AddAnswer>
+
+                                        </div>
+                                    </React.Fragment>
+                                }
+                            />
+
+
+                        </ListItem>)}
+                    <Divider variant="inset" component="li"/>
+                </List>
+
+            </>
+        );
+    } else {
+        return (
+            <>
+                <div className="d-flex justify-content-end"><ModalAddQuestion
+                    onChange={(newquestions) => setquestion(newquestions.data)} userid={1}></ModalAddQuestion></div>
+                <List className={classes.root}>
+
+                    {questions.map((question, index) =>
+                        <ListItem key={question.date} alignItems="flex-start">
+                            <ListItemAvatar>
+                                <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={ "The Question :" + question.question}
+                                secondary={
+                                    <React.Fragment>
+                                        <Typography
+                                            component="span"
+                                            variant="body1"
+
+                                            color="primary"
+                                        >
+                                            { "The Answer :  "  + question.answer }
+                                        </Typography>
+
+                                        <br/>
+                                        <span className="text-muted font-weight-bold">
+                  Posted {" "}
+                                            <ReactTimeAgo date={question.date} locale="en-US"/>
+                </span>
+
+                                    </React.Fragment>
+                                }
+                            />
+
+
+                        </ListItem>)}
+                    <Divider variant="inset" component="li"/>
+                </List>
+            </>
+        );
+    }
+}

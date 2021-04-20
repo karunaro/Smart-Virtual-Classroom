@@ -20,7 +20,11 @@ export function ProjectsPage({ className }) {
                 console.log(err)})
     },[])
 
-
+    function handleDelete(projectid){
+        axios.delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/project/`+projectid)
+            .then( () => {   setproject( (oldstate) =>  oldstate.filter( projct => projct._id != projectid) ) } )
+            .catch( (err) => console.log(err) )
+    }
     console.log(project)
     return (
         <>
@@ -109,7 +113,8 @@ export function ProjectsPage({ className }) {
                                         <ModalProject projectid={project._id}> </ModalProject>
 
                                          <a
-                                            className="btn btn-icon btn-light btn-hover-primary btn-sm "
+                                             onClick={ () => handleDelete(project._id) }
+                                             className="btn btn-icon btn-light btn-hover-primary btn-sm "
                                         >
                     <span className="svg-icon svg-icon-md svg-icon-primary">
                       <SVG

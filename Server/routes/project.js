@@ -14,6 +14,13 @@ router.get('/:id', async function(req, res, next) {
     else
         res.send('0');
   });
+  router.get('/taskstodo/:id', async function(req, res, next) {
+    const myProject = await Project.findById(req.params.id)
+    if(myProject)
+        res.send(myProject.tasks_ToDo);
+    else
+        res.send('0');
+  });
 
 router.post('/', function(req, res, next) {
     console.log(req.body)

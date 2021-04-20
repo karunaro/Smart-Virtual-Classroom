@@ -3,6 +3,7 @@ var router = express.Router();
 const Group = require('../models/group')
 const User = require('../models/user')
 const Question = require('../models/questions') 
+const Validation = require('../models/validations') 
 const Project = require('../models/project') 
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
@@ -67,6 +68,17 @@ router.get('/:id', async function(req, res, next) {
   
     res.send('respond with a resource');
 });
+router.post('/addvalidation/:idgroup/:idvalidation', async function(req, res, next) {
+   
+    const group = await Group.findById(req.params.idgroup)
+    console.log(group)
+    const newvalidation =  new Validation ({_id: req.params.idvalidation})
+    group.validations.push(newvalidation)
+    console.log(group)
+    group.save()
+  
+    res.send('respond with a resource');
+});
 
 router.post('/addproject/:idgroup/:idproject', async function(req, res, next) {
    
@@ -101,7 +113,7 @@ router.post('/addproject/:idgroup/:idproject', async function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     console.log(req.body)
-    if(req.body.name && req.body.description && req.body.members  && req.body.questions && req.body.validations && req.body.projects )
+    if(req.body.name && req.body.description )
         {
             const newGroup = new Group(req.body)
             console.log(newGroup)

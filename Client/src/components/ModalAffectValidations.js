@@ -2,7 +2,7 @@ import {
     Modal
 } from "react-bootstrap";
 import React from "react";
-import ModalGroupform from './ModalGroupform'
+import ModalValidationForm from './ModalValidationForm'
 import Button from '@material-ui/core/Button';
 export default class ModalGroup extends React.Component {
     constructor(props, context) {
@@ -29,16 +29,16 @@ export default class ModalGroup extends React.Component {
             <>
 
                 <Button variant="outlined" color="primary" onClick={this.handleShow}>
-                    Affect Student
+                    Affect Validation
                 </Button>
 
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Student to Group</Modal.Title>
+                        <Modal.Title>Validation to group</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <ModalGroupform></ModalGroupform>
-                        </Modal.Body>
+                        <ModalValidationForm></ModalValidationForm>
+                    </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close

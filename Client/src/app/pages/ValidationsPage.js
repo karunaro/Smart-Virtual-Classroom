@@ -19,6 +19,10 @@ import ModalAddvalidation from '../../components/ModalAddvalidation'
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
+import Table from "react-bootstrap/Table";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../src/_metronic/_helpers";
+import ModalAddValidation from '../../components/ModalAddvalidation'
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -40,17 +44,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export  function ValidationsPage() {
-    const [group,setgroup]= useState({validations:[]})
-    useEffect(()=>{
-        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/groups/`+ history.location.pathname.split('/')[2])
+export  function ValidationsPage({ className }) {
+    const [validations, setvalidations] = useState([])
+    //const [group,setgroup]= useState({questions: []})
+    useEffect(() => console.log(validations), [validations])
+    useEffect(() => {
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + `/validations/`)
             .then(res => {
                 console.log(res)
-                setgroup(res.data)
+                setvalidations(res.data)
             })
             .catch(err => {
-                console.log(err)})
-    },[])
+                console.log(err)
+            })
+    }, [])
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const history = useHistory();
@@ -59,46 +66,129 @@ export  function ValidationsPage() {
     };
     const result = useSelector(state => state.auth.user)
     console.log(result.id)
-
-console.log(group)
+    function handleDelete(validationid){
+        axios.delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/validations/`+validationid)
+            .then( () => {   setvalidations( (oldstate) =>  oldstate.filter( valid => valid._id != validationid) ) } )
+            .catch( (err) => console.log(err) )
+    }
     return (
         <>
-        <div className={classes.root}>
-            <div className="d-flex justify-content-end"> <ModalAddvalidation userid={result.id}></ModalAddvalidation></div>
-            {group.validations.map( (group) =>
-            <ExpansionPanel  expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1bh-content"
-                    id="panel1bh-header"
-                >
-                    <Typography className={classes.heading}>{group.validations}</Typography>
-                    <Typography className={classes.secondaryHeading}> {group.validations}</Typography>
 
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Typography className={classes.thirdHeading}>
-                        <div>
+            <div className={`card card-custom ${className}`}>
+                {/* begin::Header */}
+                <div className="card-header border-0 py-5">
+                    <h3 className="card-title align-items-start flex-column">
 
+          <span className="card-label font-weight-bolder text-dark">
+            Validations List
+          </span>
+                        <span className="text-muted mt-3 font-weight-bold font-size-sm">
 
-                            {group.validations}
+          </span>
+                    </h3>
+                    <div className="card-toolbar">
 
+                        <ModalAddValidation  onChange={(newvalidations) => setvalidations(newvalidations.data)} >
+            <span className="svg-icon svg-icon-md svg-icon-white">
+              <SVG
+                  src={toAbsoluteUrl(
+                      "/media/svg/icons/Communication/Add-user.svg"
+                  )}
+                  className="h-50 align-self-center"
+              ></SVG>
+            </span>
+                            Add New Validation
+                        </ModalAddValidation>
+                    </div>
 
+                </div>
+                {/* end::Header */}
 
-                        </div>
-                    </Typography>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>)}
+                {/* begin::Body */}
+                <div className="card-body py-0">
+                    {/* begin::Table */}
+                    <div className="table-responsive">
+                        <table
+                            className="table table-head-custom table-vertical-center"
+                            id="kt_advance_table_widget_1"
+                        >
+                            <thead>
+                            <tr className="text-left">
+                                <th className="pl-0" style={{ width: "20px" }}>
 
+                                </th>
+                                <th className="pr-0" style={{ width: "50px" }}>
+                                    Topic
+                                </th>
+                                <th style={{ minWidth: "200px" }} />
+                                <th style={{ minWidth: "150px" }}>Session</th>
+                                <th style={{ minWidth: "150px" }}>Asked Work</th>
+                                <th className="pr-0 text-right" style={{ minWidth: "150px" }}>
+                                    action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {validations.map((validation, index) =>
+                                <tr key={index}>
+                                    <td className="pl-0">
+                                        {index+1}
+                                    </td>
+                                    <td className="pr-0 p-4">
+                                        <a
+                                            href="#"
+                                            className="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg"
+                                        >
+                                            {validation.topic}
+                                        </a>
+                                        <span className="text-muted font-weight-bold text-muted d-block">
 
+                  </span>
 
+                                    </td>
+                                    <td className="pl-0">
+                                    </td>
+                                    <td>
+                  <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
+                   {validation.session}
+                  </span>
+                                        <span className="text-muted font-weight-bold">
+                    Front
+                  </span>
+                                    </td>
+                                    <td>
+                                         <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
+                  {validation.asked_work}
+                  </span>
 
+                                    </td>
+                                    <td className="pr-0 text-right">
 
-        </div>
+                                        {/*       <ModalProject projectid={project._id}> </ModalProject> */}
 
+                                        <a
+                                            onClick={ () => handleDelete(validation._id) }
+                                            className="btn btn-icon btn-light btn-hover-primary btn-sm "
+                                        >
+                    <span className="svg-icon svg-icon-md svg-icon-primary">
+                      <SVG
+                          src={toAbsoluteUrl(
+                              "/media/svg/icons/General/Trash.svg"
+                          )}
+                      ></SVG>
+                    </span>
+                                        </a>
+                                    </td>
+                                </tr>)}
 
-
-    </>
+                            </tbody>
+                        </table>
+                    </div>
+                    {/* end::Table */}
+                </div>
+                {/* end::Body */}
+            </div>
+        </>
     );
 }
 

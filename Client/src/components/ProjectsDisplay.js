@@ -47,6 +47,7 @@ export default function ProjectsDisplay() {
     console.log(group.projects)
     const [open, setOpen] = React.useState(false);
 
+
     function handleClickOpen() {
         setOpen(true);
     }

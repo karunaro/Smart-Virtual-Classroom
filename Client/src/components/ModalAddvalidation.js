@@ -37,12 +37,10 @@ export default class ModalAddvalidation extends React.Component {
         return (
             <>
 
-                <Button variant="contained" color="primary" onClick={this.handleShow} >
-                    Add Question
-                    {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
-                    <Icon >send</Icon>
-
+                <Button variant="outlined" color="primary" onClick={this.handleShow}>
+                    Add Validation
                 </Button>
+
 
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
@@ -77,7 +75,7 @@ export default class ModalAddvalidation extends React.Component {
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" type="submit" onClick={ async () => { await axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/validations/` , { topic : this.state.topic  , question : this.state.question , professor : this.props.userid}) }}>
+                        <Button variant="primary" type="submit" onClick={ async () => { await axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/validations/` , { topic : this.state.topic  , session : this.state.session , asked_work : this.state.asked_work}); this.props.onChange(await axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/validations/`)); }}>
                             Submit
                         </Button>
                     </Modal.Footer>

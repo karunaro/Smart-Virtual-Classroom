@@ -10,8 +10,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import {makeStyles} from "@material-ui/core/styles";
+import ModalAddGroup from '../../components/ModalAddGroup'
+import DeleteIcon from '@material-ui/icons/Delete';
 
-
+import IconButton from '@material-ui/core/IconButton';
 const useStyles = makeStyles({
     card: {
         maxWidth: 345,
@@ -36,9 +38,17 @@ export function Allgroups({ className }) {
     },[])
     const classes = useStyles();
     const history = useHistory();
-
+    function handleDelete(groupid){
+        axios.delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/groups/`+groupid)
+            .then( () => {   setgroup( (oldstate) =>  oldstate.filter( groupe => groupe._id != groupid) ) } )
+            .catch( (err) => console.log(err) )
+    }
     return (
+        <>
+        <div className="d-flex justify-content-end"><ModalAddGroup
+            onChange={(newgroups) => setgroup(newgroups.data)} ></ModalAddGroup></div>
 <div className="row">
+
     {group.map( (group,index) =>
         <Card key={index} className={classes.card}>
             <CardActionArea>
@@ -51,7 +61,7 @@ export function Allgroups({ className }) {
                     <Typography gutterBottom variant="h5" component="h2">
                         {group.name}
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography variant="body2"   color="textSecondary" component="p">
                         {group.description}
                     </Typography>
                 </CardContent>
@@ -60,14 +70,19 @@ export function Allgroups({ className }) {
                 <Button onClick={()=>(history.push('/group/' + group._id))}  size="lg" color="primary" >
                     Details
                 </Button>
-                <Button onClick={()=>(history.push('/questions/' + group._id))}  size="lg" color="primary" >
-                    Questions
-                </Button>
+
+
+
                 <Button onClick={()=>(history.push('/validations/' + group._id))}  size="lg" color="primary" >
                     Validations
                 </Button>
+                <IconButton aria-label="Delete" className={classes.margin}>
+                    <DeleteIcon onClick={ () => handleDelete(group._id) } fontSize="large" />
+                </IconButton>
+
             </CardActions>
         </Card>)}
 </div>
+            </>
     );
 }

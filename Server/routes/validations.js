@@ -16,4 +16,7 @@ router.post('/', function(req, res, next) {
         }
     res.send('respond with a resource');
 });
+router.delete('/:id', async function(req, res, next) {
+    res.send(await Validation.findByIdAndDelete(req.params.id));
+});
 module.exports = router;

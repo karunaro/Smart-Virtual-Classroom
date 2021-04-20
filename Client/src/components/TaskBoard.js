@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useEffect, useState}from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,27 +20,7 @@ const useStyles = makeStyles(theme => ({
         overflow: 'auto',
 
     },
-    Todo: {
-        fontSize: theme.typography.pxToRem(55),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-        color : "aqua",
-        paddingInline: 100,
-    },
-    Doing: {
-        fontSize: theme.typography.pxToRem(55),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-        color : "aqua",
-        paddingInline: 500,
-    },
-    Done: {
-        fontSize: theme.typography.pxToRem(20),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-        color : "aqua",
-        paddingInline: 1050,
-    },
+
     button: {
         margin: theme.spacing(0.5, 0),
     },
@@ -54,16 +35,28 @@ function intersection(a, b) {
     return a.filter(value => b.indexOf(value) !== -1);
 }
 
-export default function TaskBoard(questions) {
+export default function TaskBoard() {
+    useEffect(()=>console.log(tasks),[tasks])
+    useEffect(()=>{
+        axios.get(`http://localhost:444/project/taskstodo/6062f6a15f57ea40a4c238d3`)
+            .then(res => {
+                console.log(res)
+                settasks(res.data)
+            })
+            .catch(err => {
+                console.log(err)})
+    },[])
+
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
-    const [left, setLeft] = React.useState([0, 1, 2, 7]);
-    const [center, setCenter] = React.useState([4, 5, 6, 7]);
-    const [right, setRight] = React.useState([4, 5, 6, 7]);
+    const [left, setLeft] = React.useState([tasks]);
+    const [center, setCenter] = React.useState([]);
+    const [right, setRight] = React.useState([]);
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
     const centerChecked = intersection(checked, center);
-console.log(questions)
+    const [tasks,settasks]= useState([])
+
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value);
@@ -117,20 +110,20 @@ console.log(questions)
         setCenter([]);
     };
 
-    const customList = items => (
+    const customList = tasks => (
         <>
 
         <Paper className={classes.paper}>
 
             <List dense component="div" role="list">
 
-                {items.map(value => {
-                    const labelId = `transfer-list-item-${value}-label`;
+                {tasks.map((value, index) => {
+                    const labelId = `transfer-list-item-${index}-label`;
 
                     return (
 
 
-                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                        <ListItem key={index} role="listitem" button onClick={handleToggle(value)}>
 
 
                             <ListItemIcon>
@@ -141,7 +134,7 @@ console.log(questions)
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId}  primary={`Task ${value + 1}`} />
+                            <ListItemText id={labelId}  primary={` "task : "${value }`} />
                         </ListItem>
 
                     );

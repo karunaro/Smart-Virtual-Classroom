@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import QuestionsGroup from '../../components/QuestionsGroup';
 
-import ModalAddQuestion from '../../components/ModalAddQuestion';
 import {useSelector} from "react-redux";
 import {useHistory} from "react-router-dom";
 
@@ -33,10 +32,10 @@ export  function QuestionsPage() {
     console.log(history.location.pathname.split('/')[2])
     const classes = useStyles();
 
+  //  <div className="d-flex justify-content-end"> <ModalAddQuestion userid={result.id}  groupid={history.location.pathname.split('/')[2]}></ModalAddQuestion></div>
 
     return ( <>
         <div className={classes.root}>
-           <div className="d-flex justify-content-end"> <ModalAddQuestion userid={result.id}></ModalAddQuestion></div>
             <QuestionsGroup groupid={history.location.pathname.split('/')[2]}></QuestionsGroup>
         </div>
         </>
