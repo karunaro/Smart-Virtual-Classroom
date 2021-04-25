@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-var classesSchema = new mongoose.Schema({
+var sectionschema = new mongoose.Schema({
   idProf: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
@@ -9,10 +9,11 @@ var classesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "classesGroup",
   },
-  name: {
-    type: String,
+  idClasses: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "classes",
   },
-  section: {
+  name: {
     type: String,
   },
   dateCreation: {
@@ -27,5 +28,5 @@ var classesSchema = new mongoose.Schema({
   ],
 });
 
-const classes = mongoose.model("classes", classesSchema, "classes");
-module.exports = classes;
+const sections = mongoose.model("sections", sectionschema, "sections");
+module.exports = sections;

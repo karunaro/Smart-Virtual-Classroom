@@ -1,18 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getClassesByIdGroup,
-  getClassesByIdGroupAndIdProf,
-  getClassesForStudents,
-} from "../redux/Slices/classes";
-
 import { makeStyles } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
 
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-
+import { Dropdown } from "react-bootstrap";
 import Typography from "@material-ui/core/Typography";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import { Link } from "react-router-dom";
@@ -27,11 +19,11 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteClass from "./CreateClass/DeleteClass";
-import EditCLass from "./EditClass/EditCLass";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getSectionsByClass } from "../../redux/Slices/sections";
+import DropdownSectionActions from "./DropdownSectionActions";
+import { DropdownCustomToggler } from "../../_metronic/_partials/dropdowns";
 
 const useStyles = makeStyles({
   card: {
@@ -44,43 +36,23 @@ const useStyles = makeStyles({
     backgroundColor: red[500],
   },
 });
-function ListClasses() {
-  const Listclasses = useSelector((state) => state.classes.classByGroup);
-  const userConnected = JSON.parse(localStorage.getItem("user"));
-
-  console.log(Listclasses);
+export default function ListSections() {
+  const sections = useSelector((state) => state.sections.listSectionsByClass);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (userConnected.role === "admin") {
-      dispatch(getClassesByIdGroup(localStorage.getItem("classGroupURL")));
-    }
-    if (userConnected.role === "professor") {
-      const obj = {
-        idGroup: localStorage.getItem("classGroupURL"),
-        idProf: userConnected._id,
-      };
-      console.log(obj);
-      dispatch(getClassesByIdGroupAndIdProf(obj));
-    }
-    if (userConnected.role === "student") {
-      dispatch(getClassesForStudents(userConnected._id));
-    }
-  }, [localStorage.getItem("classGroupURL")]);
-
+    dispatch(getSectionsByClass(localStorage.getItem("classURL")));
+  }, [localStorage.getItem("classURL"), dispatch]);
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const userConnected = JSON.parse(localStorage.getItem("user"));
 
-  function handleExpandClick() {
-    setExpanded(!expanded);
-  }
-  const handleURLClass = (idClass) => {
-    localStorage.setItem("classURL", idClass);
+  const handleURLSection = (idSection) => {
+    localStorage.setItem("sectionURL", idSection);
   };
 
   return (
     <div>
       <Grid container spacing={3}>
-        {Listclasses.map((c, index) => (
+        {sections.map((c, index) => (
           <Grid item xs={3} key={index}>
             <Card className={classes.card} key={index}>
               <CardHeader
@@ -93,13 +65,28 @@ function ListClasses() {
                 action={
                   userConnected.role === "admin" ? (
                     <>
-                      <GridList cellHeight={150} className={classes.gridList}>
-                        <EditCLass idClass={c._id}></EditCLass>
+                      {/* <EditCLass idClass={c._id}></EditCLass>
                         <DeleteClass
                           idClass={c._id}
                           name={c.name}
-                        ></DeleteClass>
-                      </GridList>
+                        ></DeleteClass> */}
+
+                      <div className="card-toolbar">
+                        <Dropdown className="dropdown-inline" alignRight>
+                          <Dropdown.Toggle
+                            id="dropdown-toggle-top"
+                            as={DropdownCustomToggler}
+                          >
+                            <i className="ki ki-bold-more-ver" />
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu className="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                            <DropdownSectionActions
+                              idSection={c._id}
+                              name={c.name}
+                            />
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
                     </>
                   ) : (
                     <></>
@@ -109,7 +96,7 @@ function ListClasses() {
                   <ReactTimeAgo date={c.dateCreation} locale="en-US" />
                 }
               />
-              <Link onClick={() => handleURLClass(c._id)} to="/sections">
+              <Link onClick={() => handleURLSection(c._id)} to="/insideClass">
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -125,9 +112,7 @@ function ListClasses() {
                       variant="body2"
                       color="textSecondary"
                       component="p"
-                    >
-                      {c.section}
-                    </Typography>
+                    ></Typography>
                   </CardContent>
                 </CardActionArea>
               </Link>
@@ -138,5 +123,3 @@ function ListClasses() {
     </div>
   );
 }
-
-export default ListClasses;

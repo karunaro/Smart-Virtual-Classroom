@@ -47,6 +47,74 @@ export const getClassesByIdGroupAndIdProf = createAsyncThunk(
   }
 );
 
+export const UpdateListStudents = createAsyncThunk(
+  "classes/UpdateListStudents",
+  async (obj) => {
+    console.log(obj);
+    const { data } = await axios.put(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/class/updateStudents/" +
+        obj.classOb,
+      obj
+    );
+
+    return data;
+  }
+);
+
+export const DeleteStudentFromList = createAsyncThunk(
+  "classes/DeleteStudentFromList",
+  async (obj) => {
+    console.log(obj);
+    const { data } = await axios.put(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/class/deleteStudent/" +
+        obj.classOb,
+      obj
+    );
+
+    return data;
+  }
+);
+
+export const getListStudentInClass = createAsyncThunk(
+  "classes/getListStudentInClass",
+  async (idClass) => {
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/class/getListStudent/" +
+        idClass
+    );
+
+    return data;
+  }
+);
+
+export const getClassesForStudents = createAsyncThunk(
+  "classes/getClassesForStudents",
+  async (idUser) => {
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND_PROTOCOL +
+        process.env.REACT_APP_BACKEND_IP +
+        ":" +
+        process.env.REACT_APP_BACKEND_PORT +
+        "/invitation/listAcceptedByUser/" +
+        idUser
+    );
+
+    return data;
+  }
+);
+
 export const Addclasses = createAsyncThunk(
   "classes/Addclasses",
   async (classes) => {
@@ -187,6 +255,7 @@ export const classesSlice = createSlice({
     classById: null,
     classByGroup: [],
     classURL: null,
+    listStudents: [],
   },
   extraReducers: {
     [getClasses.pending]: (state, action) => {
@@ -213,11 +282,24 @@ export const classesSlice = createSlice({
     [GetClaseesById.fulfilled]: (state, action) => {
       state.classById = action.payload;
     },
+    [getClassesForStudents.fulfilled]: (state, action) => {
+      state.classByGroup = action.payload;
+    },
     [getClassesByIdGroup.fulfilled]: (state, action) => {
       state.classByGroup = action.payload;
     },
     [getClassesByIdGroupAndIdProf.fulfilled]: (state, action) => {
       state.classByGroup = action.payload;
+    },
+
+    [UpdateListStudents.fulfilled]: (state, action) => {
+      state.status = "list students updated";
+    },
+    [DeleteStudentFromList.fulfilled]: (state, action) => {
+      state.status = "Student deleted from List";
+    },
+    [getListStudentInClass.fulfilled]: (state, action) => {
+      state.listStudents = action.payload;
     },
 
     [Editclasses.fulfilled]: (state, action) => {
