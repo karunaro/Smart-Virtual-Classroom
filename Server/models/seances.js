@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var seancesSchema = new mongoose.Schema({
   idClasses: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "classes",
+    ref: "sections",
   },
   name: {
     type: String,

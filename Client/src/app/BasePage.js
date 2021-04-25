@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import ListCLassesGroup from "../components/ListCLassesGroup";
 import ListCLasses from "../components/ListClasses";
 import insideClass from "../components/InsideClass";
+import ListSections from "../components/SectionsManagement/ListSections";
 
 const GoogleMaterialPage = lazy(() =>
   import("./modules/GoogleMaterialExamples/GoogleMaterialPage")
@@ -51,6 +52,7 @@ export default function BasePage() {
 
             <ContentRoute path="/classesGroupe" component={ListCLassesGroup} />
             <ContentRoute path="/classes" component={ListCLasses} />
+            <ContentRoute path="/sections" component={ListSections} />
             <ContentRoute path="/insideClass" component={insideClass} />
             <ContentRoute path="/listCourses" component={insideClass} />
             <ContentRoute path="/DetailCourses" component={insideClass} />

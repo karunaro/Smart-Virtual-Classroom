@@ -17,21 +17,32 @@ import "socicon/css/socicon.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./_metronic/_assets/plugins/flaticon/flaticon.css";
 import "./_metronic/_assets/plugins/flaticon2/flaticon.css";
+import "semantic-ui-css/semantic.min.css";
 // Datepicker
 import "react-datepicker/dist/react-datepicker.css";
 import {
   MetronicLayoutProvider,
   MetronicSplashScreenProvider,
-  MetronicSubheaderProvider
+  MetronicSubheaderProvider,
 } from "./_metronic/layout";
-import {MetronicI18nProvider} from "./_metronic/i18n";
+import { MetronicI18nProvider } from "./_metronic/i18n";
 
 /**
  * Base URL of the website.
  *
  * @see https://facebook.github.io/create-react-app/docs/using-the-public-folder
  */
-const { REACT_APP_BACKEND_IP, REACT_APP_BACKEND_PORT, REACT_APP_BACKEND_PROTOCOL, PUBLIC_URL } = process.env;
+const {
+  REACT_APP_BACKEND_IP,
+  REACT_APP_BACKEND_PORT,
+  REACT_APP_BACKEND_PROTOCOL,
+  PUBLIC_URL,
+} = process.env;  //_redux.mockAxios(axios);
+/**
+ * Inject metronic interceptors for axios.
+ *
+ * @see https://github.com/axios/axios#interceptors
+ */
 
 /**
  * Creates `axios-mock-adapter` instance for provided `axios` instance, add
@@ -39,17 +50,18 @@ const { REACT_APP_BACKEND_IP, REACT_APP_BACKEND_PORT, REACT_APP_BACKEND_PROTOCOL
  *
  * @see https://github.com/ctimmerm/axios-mock-adapter
  */
-/* const mock = */ //_redux.mockAxios(axios);
+/* const mock = */ _redux.setupAxios(axios, store);
 
-/**
- * Inject metronic interceptors for axios.
- *
- * @see https://github.com/axios/axios#interceptors
- */
-_redux.setupAxios(axios, store);
-
-console.log('im in the indexjs file: ' + REACT_APP_BACKEND_IP + ' PORT: ' + REACT_APP_BACKEND_PORT
- + ' protocol: ' + REACT_APP_BACKEND_PROTOCOL + ' localportreact: ' + process.env.REACT_APP_FRONTEND_PORT)
+console.log(
+  "im in the indexjs file: " +
+    REACT_APP_BACKEND_IP +
+    " PORT: " +
+    REACT_APP_BACKEND_PORT +
+    " protocol: " +
+    REACT_APP_BACKEND_PROTOCOL +
+    " localportreact: " +
+    process.env.REACT_APP_FRONTEND_PORT
+);
 
 ReactDOM.render(
   <MetronicI18nProvider>
