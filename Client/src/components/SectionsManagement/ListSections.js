@@ -47,7 +47,6 @@ export default function ListSections() {
 
   const handleURLSection = (idSection) => {
     localStorage.setItem("sectionURL", idSection);
-    console.log("test");
   };
 
   return (
