@@ -212,17 +212,6 @@ export function HeaderMenu({ layoutProps }) {
           {/*begin::1 Level*/}
 
           <li
-            className={`menu-item menu-item-rel ${getMenuItemActive(
-              "/classes"
-            )}`}
-          >
-            <NavLink className="menu-link" to="/classes">
-              <span className="menu-text">Classes</span>
-              {layoutProps.rootArrowEnabled && <i className="menu-arrow" />}
-            </NavLink>
-          </li>
-
-          <li
             data-menu-toggle={layoutProps.menuDesktopToggle}
             aria-haspopup="true"
             className={`menu-item menu-item-submenu menu-item-rel ${getMenuItemActive(

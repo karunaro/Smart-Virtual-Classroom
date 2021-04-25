@@ -6,8 +6,6 @@ import ListCourses from "./ListCourses";
 import ListSeances from "./ListSeances";
 import { makeStyles } from "@material-ui/core/styles";
 import DetailCourses from "./DetailCourses";
-import { Button } from "react-bootstrap";
-import AddMembersModal from "./AddMembers/AddMembersModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,8 +22,18 @@ function InsideClass() {
   const { idClass } = useParams();
   return (
     <div>
-      <AddMembersModal></AddMembersModal>
-      <br />
+      {/* <Grid>
+        <Grid.Row>
+          <Grid.Column width={3}>
+            <ListSeances></ListSeances>
+          </Grid.Column>
+          <Grid.Column width={13}>
+            <Route path={"/listCourses"}>
+              <ListCourses idClass={idClass}></ListCourses>
+            </Route>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid> */}
       <Grid container spacing={1}>
         <Grid container item xs={12} spacing={3}>
           <Grid item xs={3}>

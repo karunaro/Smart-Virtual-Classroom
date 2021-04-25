@@ -12,8 +12,6 @@ import CreateClassesGroup from "../../../../../components/CreateClassesGroup/Cre
 import CreateClass from "../../../../../components/CreateClass/CreateClass";
 import CreateSeance from "../../../../../components/CreateSeance/CreateSeance";
 import CreateCourses from "../../../../../components/CreateCourses/CreateCourses";
-import AddSectionModal from "../../../../../components/SectionsManagement/AddSectionModal";
-import { ViewInacceptedClass } from "../../../../../components/AddMembers/ViewInacceptedClass";
 
 export function QuickActionsDropdown() {
   const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");
@@ -94,7 +92,6 @@ export function QuickActionsDropdown() {
                   <>
                     <CreateClassesGroup></CreateClassesGroup>
                     <CreateClass></CreateClass>
-                    <AddSectionModal></AddSectionModal>
                   </>
                 ) : userConnected.role === "professor" ? (
                   <>
@@ -103,9 +100,7 @@ export function QuickActionsDropdown() {
                     <CreateCourses></CreateCourses>
                   </>
                 ) : (
-                  <>
-                    <ViewInacceptedClass></ViewInacceptedClass>
-                  </>
+                  <></>
                 )}
               </div>
             </form>

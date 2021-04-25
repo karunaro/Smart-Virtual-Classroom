@@ -19,12 +19,6 @@ var classesSchema = new mongoose.Schema({
     type: Date,
     min: "1987-09-28",
   },
-  classUsers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-  ],
 });
 
 const classes = mongoose.model("classes", classesSchema, "classes");
