@@ -40,10 +40,6 @@ export default function ListSections() {
   const sections = useSelector((state) => state.sections.listSectionsByClass);
   const dispatch = useDispatch();
   useEffect(() => {
-
-  
-      
-      
     dispatch(getSectionsByClass(localStorage.getItem("classURL")));
   }, [localStorage.getItem("classURL"), dispatch]);
   const classes = useStyles();
@@ -51,6 +47,7 @@ export default function ListSections() {
 
   const handleURLSection = (idSection) => {
     localStorage.setItem("sectionURL", idSection);
+    console.log("test");
   };
 
   return (
