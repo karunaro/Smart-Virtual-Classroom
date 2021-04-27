@@ -39,8 +39,8 @@ function ListSeances() {
   const seances = useSelector((state) => state.seances.classBySeances);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getseancesByIdClass(localStorage.getItem("classURL")));
-  }, [localStorage.getItem("classURL"), localStorage.getItem("seanceURL")]);
+    dispatch(getseancesByIdClass(localStorage.getItem("sectionURL")));
+  }, [localStorage.getItem("sectionURL"), localStorage.getItem("seanceURL")]);
 
   const handleURLSeance = (id, name) => {
     dispatch(StockURLSeance(id));

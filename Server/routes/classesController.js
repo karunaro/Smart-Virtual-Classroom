@@ -57,6 +57,38 @@ router.get("/findByIdGroupAndOwner/:id/:idProf", (req, res) => {
     });
 });
 
+// READ (list Classes for students)
+router.get("/findClassesForStudents/:id", async (req, res) => {
+  try {
+    let newLevel = await classes.aggregate([
+      {
+        $match: {
+          classUsers: {
+            $in: [mongoose.Types.ObjectId(req.params.id)],
+          },
+        },
+      },
+    ]);
+
+    res.json(newLevel);
+  } catch (error) {
+    res.status(404).json({ statue: false, message: error.message });
+  }
+});
+
+// get List Student of a specific Class
+router.get("/getListStudent/:id", (req, res) => {
+  classes
+    .findOne({ _id: req.params.id })
+    .populate("classUsers")
+    .then((result) => {
+      res.json(result.classUsers);
+    })
+    .catch((err) => {
+      res.status(404).json({ success: false, msg: `No such course.` });
+    });
+});
+
 // ADD
 router.post("/", (req, res) => {
   console.log(req.body);
@@ -133,6 +165,82 @@ router.delete("/:id", (req, res) => {
     .catch((err) => {
       res.status(404).json({ success: false, msg: "Nothing to delete." });
     });
+});
+
+// update students List //
+
+router.put("/updateStudents/:id", (req, res) => {
+  classes.findOne({ _id: req.params.id }).then((result) => {
+    console.log("Req body !!!!!!");
+    console.log(req.body);
+    console.log(req.body.userOb);
+    const studentsArray = result.classUsers;
+    studentsArray.push(req.body.userOb);
+    console.log("class users After update");
+    console.log(studentsArray);
+    classes
+      .updateOne({ _id: req.params.id }, { classUsers: studentsArray })
+      .then((resultat) => {
+        res.json({
+          success: true,
+          msg: `It has been Updated.`,
+          result: {
+            _id: result._id,
+            idProf: result.idProf,
+            idGroup: result.idGroup,
+            name: result.name,
+            section: result.section,
+            dateCreation: result.dateCreation,
+            classUsers: studentsArray,
+          },
+        });
+      })
+      .catch((err) => {
+        res
+          .status(404)
+          .json({ success: false, msg: "Something went wrong" + err });
+      });
+  });
+});
+
+// delete Student from list students
+
+router.put("/deleteStudent/:id", (req, res) => {
+  classes.findOne({ _id: req.params.id }).then((result) => {
+    console.log("Req body !!!!!!");
+    console.log(req.body);
+    console.log(req.body.userOb);
+    const idUser = req.body.userOb;
+    const studentsArray = result.classUsers;
+    const index = studentsArray.indexOf(idUser);
+
+    studentsArray.splice(index, 1);
+
+    console.log("class users After update");
+    console.log(studentsArray);
+    classes
+      .updateOne({ _id: req.params.id }, { classUsers: studentsArray })
+      .then((resultat) => {
+        res.json({
+          success: true,
+          msg: `It has been Updated.`,
+          result: {
+            _id: result._id,
+            idProf: result.idProf,
+            idGroup: result.idGroup,
+            name: result.name,
+            section: result.section,
+            dateCreation: result.dateCreation,
+            classUsers: studentsArray,
+          },
+        });
+      })
+      .catch((err) => {
+        res
+          .status(404)
+          .json({ success: false, msg: "Something went wrong" + err });
+      });
+  });
 });
 
 router.put("/:id", (req, res) => {

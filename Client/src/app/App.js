@@ -9,6 +9,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Routes } from "../app/Routes";
 import { I18nProvider } from "../_metronic/i18n";
 import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
+import "semantic-ui-css/semantic.min.css";
 
 import en from "javascript-time-ago/locale/en";
 import ru from "javascript-time-ago/locale/ru";

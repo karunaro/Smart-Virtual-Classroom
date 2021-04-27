@@ -9,8 +9,12 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AddSeances, getseancesByIdClass } from "../../redux/Slices/seances";
 import { makeStyles } from "@material-ui/core/styles";
-import { getClasses, getClassesByIdGroupAndIdProf } from "../../redux/Slices/classes";
+import {
+  getClasses,
+  getClassesByIdGroupAndIdProf,
+} from "../../redux/Slices/classes";
 import AddIcon from "@material-ui/icons/Add";
+import { getAllSection, getSectionsByClass } from "../../redux/Slices/sections";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 function FormSeance() {
   const classes = useStyles();
   const [Name, SetName] = useState("");
-  const classess = useSelector((state) => state.classes.classByGroup);
+  const sections = useSelector((state) => state.sections.listSections);
   const userConnected = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -42,7 +46,7 @@ function FormSeance() {
       idProf: userConnected._id,
     };
     console.log(obj);
-    dispatch(getClassesByIdGroupAndIdProf(obj));
+    dispatch(getAllSection());
   }, [dispatch]);
 
   const handleChangeName = (e) => {
@@ -53,11 +57,11 @@ function FormSeance() {
   const [selectedItem, SetSelectedItem] = useState(0);
   const ClassesOptions = [{ key: Number, text: "", value: "" }];
 
-  for (let i = 0; i < classess.length; i++) {
+  for (let i = 0; i < sections.length; i++) {
     const option = {
-      key: classess[i]._id,
-      text: classess[i].name,
-      value: classess[i].name,
+      key: sections[i]._id,
+      text: sections[i].name,
+      value: sections[i].name,
     };
 
     ClassesOptions.push(option);

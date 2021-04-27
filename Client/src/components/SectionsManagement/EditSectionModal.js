@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -11,12 +11,12 @@ import { IconButton, MenuItem } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 
 import { makeStyles } from "@material-ui/core/styles";
-import FormSeance from "./FormSeance";
 import { useLocation } from "react-router";
-import { checkIsActive, toAbsoluteUrl } from "../../_metronic/_helpers";
+import { checkIsActive } from "../../_metronic/_helpers";
 import { NavLink } from "react-router-dom";
-import SVG from "react-inlinesvg";
-
+import EditSectionForm from "./EditSectionForm";
+import { useDispatch } from "react-redux";
+import { getAllProfessors } from "../../redux/Slices/classesGroup";
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -26,9 +26,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CreateSeance(props) {
+export default function EditSectionModal(props) {
   const location = useLocation();
-  const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");
 
   const getMenuItemActive = (url) => {
     return checkIsActive(location, url) ? "menu-item-active" : "";
@@ -39,47 +38,41 @@ export default function CreateSeance(props) {
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   function handleClickOpen() {
-    console.log(props.idGroup);
     setOpen(true);
+    console.log("true");
   }
 
   function handleClose() {
     setOpen(false);
+    console.log("false");
   }
 
-  return (
-    <>
-      <div className="col-6">
-        <a
-          onClick={handleClickOpen}
-          href="#"
-          className="d-block py-10 px-5 text-center bg-hover-light border-right"
-        >
-          <span className="svg-icon svg-icon-3x svg-icon-success">
-            <SVG src={toAbsoluteUrl("/media/svg/icons/Home/Library.svg")}></SVG>
-          </span>
-          <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-            Add Seance
-          </span>
-          <span className="d-block text-dark-50 font-size-lg">
-            Pending Tasks
-          </span>
-        </a>
-      </div>
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllProfessors());
+  }, [dispatch]);
 
+  return (
+    <div>
+      <li className="navi-item">
+        <a onClick={handleClickOpen} href="#" className="navi-link">
+          <span className="navi-icon">
+            <i className="flaticon2-edit"></i>
+          </span>
+          <span className="navi-text">Edit</span>
+        </a>
+      </li>
       <Dialog
         fullScreen={false}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {"Add new Seance"}
-        </DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{"Edit Section"}</DialogTitle>
         <DialogContent>
-          <FormSeance idGroup={props.idGroup}></FormSeance>
+          <EditSectionForm idSection={props.idSection}></EditSectionForm>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

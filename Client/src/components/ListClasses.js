@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getClassesByIdGroup,
   getClassesByIdGroupAndIdProf,
+  getClassesForStudents,
 } from "../redux/Slices/classes";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -61,6 +62,9 @@ function ListClasses() {
       console.log(obj);
       dispatch(getClassesByIdGroupAndIdProf(obj));
     }
+    if (userConnected.role === "student") {
+      dispatch(getClassesForStudents(userConnected._id));
+    }
   }, [localStorage.getItem("classGroupURL")]);
 
   const classes = useStyles();
@@ -105,7 +109,7 @@ function ListClasses() {
                   <ReactTimeAgo date={c.dateCreation} locale="en-US" />
                 }
               />
-              <Link onClick={() => handleURLClass(c._id)} to="/insideClass">
+              <Link onClick={() => handleURLClass(c._id)} to="/sections">
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}

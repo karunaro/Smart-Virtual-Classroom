@@ -1,5 +1,6 @@
 import {
   Button,
+  makeStyles,
   MenuItem,
   OutlinedInput,
   Select,
@@ -21,12 +22,30 @@ import {
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
+import { getAllSection } from "../../redux/Slices/sections";
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  dense: {
+    marginTop: theme.spacing(2),
+  },
+  menu: {
+    width: 200,
+  },
+}));
 function FormEditSeance(props) {
   const { id } = useParams();
+  const classes = useStyles();
   const [Name, SetName] = useState("");
   const userConnected = JSON.parse(localStorage.getItem("user"));
-  const classes = useSelector((state) => state.classes.classByGroup);
+  const sections = useSelector((state) => state.sections.listSections);
 
   const dispatch = useDispatch();
   const handleChangeName = (e) => {
@@ -37,11 +56,11 @@ function FormEditSeance(props) {
   const [selectedItem, SetSelectedItem] = useState(0);
   const ClassesOptions = [{ key: Number, text: "", value: "" }];
 
-  for (let i = 0; i < classes.length; i++) {
+  for (let i = 0; i < sections.length; i++) {
     const option = {
-      key: classes[i]._id,
-      text: classes[i].name,
-      value: classes[i].name,
+      key: sections[i]._id,
+      text: sections[i].name,
+      value: sections[i].name,
     };
 
     ClassesOptions.push(option);
@@ -61,7 +80,7 @@ function FormEditSeance(props) {
       idProf: userConnected._id,
     };
     console.log(obj);
-    dispatch(getClassesByIdGroupAndIdProf(obj));
+    dispatch(getAllSection());
   }, [localStorage.getItem("seanceURL")]);
 
   const handleChangeSelect = async (e) => {

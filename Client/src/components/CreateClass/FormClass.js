@@ -14,6 +14,11 @@ import { Addclasses, getClassesByIdGroup } from "../../redux/Slices/classes";
 import { getclassesGroup } from "../../redux/Slices/classesGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
+import { Multiselect } from "multiselect-react-dropdown";
+import {
+  getAllStudents,
+  sendInvitations,
+} from "../../redux/Slices/invitations";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,14 +38,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FormClass() {
+  const multiselectRef = React.createRef();
   const classes = useStyles();
   const [Name, SetName] = useState("");
   const [Section, SetSection] = useState("");
   const groupes = useSelector((state) => state.classesGroup.list);
+  const students = useSelector((state) => state.invitations.listStudents);
   const idOwner = localStorage.getItem("idOwner");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getclassesGroup());
+    dispatch(getAllStudents());
   }, [dispatch]);
   const handleChangeName = (e) => {
     SetName(e.target.value);
@@ -49,6 +57,7 @@ function FormClass() {
   const [labelWidth, setLabelWidth] = React.useState(0);
 
   const [selectedItem, SetSelectedItem] = useState(0);
+  const [selectedValue, setSelectedValue] = useState([]);
   const ClassesOptions = [{ key: Number, text: "", value: "" }];
 
   for (let i = 0; i < groupes.length; i++) {
@@ -61,10 +70,35 @@ function FormClass() {
     ClassesOptions.push(option);
   }
 
+  const StudentsOptions = [];
+
+  for (let i = 0; i < students.length; i++) {
+    const option = {
+      key: students[i]._id,
+      text: students[i].firstname,
+      value: students[i].email,
+    };
+
+    StudentsOptions.push(option);
+  }
+
   const handleChangeSelect = async (e) => {
     console.log(e.target.value);
     await SetSelectedItem(e.target.value);
     await console.log(selectedItem);
+  };
+
+  const onSelect = (selectedList, selectedItem) => {
+    setSelectedValue(selectedValue.concat(selectedItem));
+
+    console.log(selectedValue);
+  };
+  const onRemove = (selectedList, removedItem) => {
+    setSelectedValue(
+      selectedList.filter((item) => item.key !== removedItem.key)
+    );
+
+    console.log(selectedValue);
   };
 
   const handleChangeSection = (e) => {
@@ -80,8 +114,17 @@ function FormClass() {
       idGroup: selectedItem,
     };
 
-    dispatch(Addclasses(classes)).then(() => {
+    dispatch(Addclasses(classes)).then((res) => {
       dispatch(getClassesByIdGroup(localStorage.getItem("classGroupURL")));
+      for (let i = 0; i < selectedValue.length; i++) {
+        dispatch(
+          sendInvitations({
+            status: "loading",
+            classOb: res.payload.result._id,
+            userOb: selectedValue[i].key,
+          })
+        );
+      }
     });
   };
 
@@ -105,7 +148,6 @@ function FormClass() {
           onChange={handleChangeSelect}
           input={<OutlinedInput name="Groupe" id="outlined-age-simple" />}
         >
-    
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
@@ -126,6 +168,24 @@ function FormClass() {
           variant="outlined"
           required
         />
+
+        <h1>
+          Hello theres please choose the students you wish to add them to this
+          class ;)
+        </h1>
+
+        <br />
+        <Multiselect
+          options={StudentsOptions}
+          displayValue="value"
+          selectedValues={selectedValue}
+          onSelect={onSelect}
+          onRemove={onRemove}
+          ref={multiselectRef}
+        />
+        <br />
+        <br />
+        <br />
 
         <Button
           onClick={addclass}

@@ -21,9 +21,14 @@ import {
 import { red } from "@material-ui/core/colors";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSectionsByClass } from "../../redux/Slices/sections";
+import {
+  getSectionsByClass,
+  getSectionsByClassAndProf,
+  getSectionsForStudent,
+} from "../../redux/Slices/sections";
 import DropdownSectionActions from "./DropdownSectionActions";
 import { DropdownCustomToggler } from "../../_metronic/_partials/dropdowns";
+import AddMembersModal from "../AddMembers/AddMembersModal";
 
 const useStyles = makeStyles({
   card: {
@@ -39,15 +44,30 @@ const useStyles = makeStyles({
 export default function ListSections() {
   const sections = useSelector((state) => state.sections.listSectionsByClass);
   const dispatch = useDispatch();
+  const userConnected = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
+    if (userConnected.role === "admin") {
+      dispatch(getSectionsByClass(localStorage.getItem("classURL")));
+    }
 
-  
-      
-      
-    dispatch(getSectionsByClass(localStorage.getItem("classURL")));
+    if (userConnected.role === "professor") {
+      dispatch(
+        getSectionsByClassAndProf({
+          classId: localStorage.getItem("classURL"),
+          profId: userConnected._id,
+        })
+      );
+    }
+    if (userConnected.role === "student") {
+      dispatch(
+        getSectionsForStudent({
+          idUser: userConnected._id,
+          classOb: localStorage.getItem("classURL"),
+        })
+      );
+    }
   }, [localStorage.getItem("classURL"), dispatch]);
   const classes = useStyles();
-  const userConnected = JSON.parse(localStorage.getItem("user"));
 
   const handleURLSection = (idSection) => {
     localStorage.setItem("sectionURL", idSection);
@@ -55,6 +75,8 @@ export default function ListSections() {
 
   return (
     <div>
+      <AddMembersModal></AddMembersModal>
+      <br />
       <Grid container spacing={3}>
         {sections.map((c, index) => (
           <Grid item xs={3} key={index}>
