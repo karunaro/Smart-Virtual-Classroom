@@ -10,7 +10,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 import React, {  useState } from "react";
-
+import swal from 'sweetalert';
 import { useFormik } from "formik";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
@@ -88,7 +88,8 @@ const formik = useFormik({
     validationSchema: ForgotPasswordSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
         reset(values.token,values.password)
-        .then(() => setIsRequested(true))
+        .then(({ data }) => {setIsRequested(true);
+          swal("success !", "you changed your password ", "success")})
         .catch(() => {
           setIsRequested(false);
           setSubmitting(false);

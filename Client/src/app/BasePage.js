@@ -9,6 +9,7 @@ import {GroupPage} from "./pages/GroupPage";
 import { ViewMeetopias } from "./pages/Meetopia/ViewMeetopias";
 import { MyQuizzes } from "./pages/Quizz/MyQuizzes";
 import { NewQuizzPage } from "./pages/Quizz/NewQuizzPage";
+<<<<<<< Updated upstream
 import {ValidationsPage} from "./pages/ValidationsPage";
 import {QuestionsPage} from "./pages/QuestionsPage";
 import {Allgroups} from "./pages/Allgroups";
@@ -16,6 +17,18 @@ import {ProjectsPage} from "./pages/ProjectsPage";
 import {ProfessorsPage} from "./pages/ProfessorsPage";
 import {AdminsPage} from "./pages/AdminsPage";
 
+=======
+import { ValidationsPage } from "./pages/ValidationsPage";
+import { QuestionsPage } from "./pages/QuestionsPage";
+import { Allgroups } from "./pages/Allgroups";
+import { ProjectsPage } from "./pages/ProjectsPage";
+import { ProfessorsPage } from "./pages/ProfessorsPage";
+import { ProfessorsNAPage } from "./pages/ProfessorsNAPage";
+import { AdminsPage } from "./pages/AdminsPage";
+import { Students } from "./pages/Students";
+import  Contact  from "./pages/Contact";
+import { useSelector } from "react-redux";
+>>>>>>> Stashed changes
 
 import ListCLassesGroup from "../components/ListCLassesGroup";
 import ListCLasses from "../components/ListClasses";
@@ -30,10 +43,52 @@ const ECommercePage = lazy(() =>
 );
 
 export default function BasePage() {
+<<<<<<< Updated upstream
     // useEffect(() => {
     //   console.log('Base page');
     // }, []) // [] - is required if you need only one call
     // https://reactjs.org/docs/hooks-reference.html#useeffect
+=======
+  const user = useSelector((state) => state.auth.user);
+  // useEffect(() => {
+  //   console.log('Base page');
+  // }, []) // [] - is required if you need only one call
+  // https://reactjs.org/docs/hooks-reference.html#useeffect
+
+  return (
+    <Suspense fallback={<LayoutSplashScreen />}>
+      <Switch>
+        {
+          /* Redirect from root URL to /dashboard. */
+          <Redirect exact from="/" to="/classesGroupe" />
+        }
+        {user.role === "admin" ? (
+          <Switch>
+            <ContentRoute path="/professors" component={ProfessorsPage} />
+            <ContentRoute path="/professorsA" component={ProfessorsNAPage} />
+
+            <ContentRoute path="/admins" component={AdminsPage} />
+            <ContentRoute path="/students" component={Students} />
+
+            <ContentRoute path="/classesGroupe" component={ListCLassesGroup} />
+            <ContentRoute path="/classes" component={ListCLasses} />
+            <ContentRoute path="/insideClass" component={insideClass} />
+            <ContentRoute path="/listCourses" component={insideClass} />
+            <ContentRoute path="/DetailCourses" component={insideClass} />
+          </Switch>
+        ) : (
+          <Switch>
+            <ContentRoute path="/dashboard" component={DashboardPage} />
+            <ContentRoute path="/contact" component={Contact} />
+            <ContentRoute path="/builder" component={BuilderPage} />
+            <ContentRoute path="/my-page" component={MyPage} />
+            <ContentRoute path="/Meetopia" component={MeetopiaPage} />
+            <ContentRoute path="/MyMeetopias" component={ViewMeetopias} />
+            <ContentRoute path="/MyQuizzes" component={MyQuizzes} />
+            <ContentRoute path="/CreateNewQuizz" component={NewQuizzPage} />
+            <ContentRoute path="/allgroups" component={Allgroups} />
+            <ContentRoute path="/group" component={GroupPage} />
+>>>>>>> Stashed changes
 
     return (
         <Suspense fallback={<LayoutSplashScreen/>}>

@@ -6,13 +6,15 @@ import {  Button,TextField,Input, InputAdornment, IconButton } from '@material-u
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
-import { login,loginGmail } from "../_redux/authCrud";
+import { login,loginGmail,loginlinkedin } from "../_redux/authCrud";
 import {GoogleLogin} from 'react-google-login';
 import Icon from './icon';
 import useStyles from './style';
 import swal from 'sweetalert';
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { LinkedIn } from 'react-linkedin-login-oauth2';
+import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png'
 
 
 /*
@@ -23,7 +25,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 /*
   Formik+YUP:
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-*/
+*/ 
 
 const initialValues = {
   email: "",
@@ -92,6 +94,49 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
   //     console.log(error);
   //   }
   // };
+ const handleSuccess = (data) => {
+    console.log(data)
+  }
+  const linkedinSuccess = async (response) => {
+    console.log(response)
+    try {
+      const tokenId= response.code
+      console.log(tokenId)
+      
+        loginlinkedin(tokenId)
+          
+            .then(({ data: {token} }) => { 
+            console.log("googleres") 
+            localStorage.setItem("jwtToken", token);
+            console.log(token);
+            disableLoading();
+            props.login(token);
+            console.log("vv");
+           
+          })
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.StudentNa)
+            
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
+            }
+           
+          });
+     
+
+        
+    } catch (err) {
+        
+         
+        swal("error", "Linkedin Sign In was unsuccessful. Try again later" , "error");
+    }
+}
+
+ const  handleFailure = (error) => {
+  console.log(error)
+  }
   const googleSuccess = async (response) => {
     console.log(response)
     try {
@@ -101,18 +146,21 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
         loginGmail(tokenId)
           .then(({ data: {token} }) => { 
             console.log("googleres") 
-           
-           
             localStorage.setItem("jwtToken", token);
             console.log(token);
             disableLoading();
             props.login(token);
             console.log("vv");
           })
-          .catch(() => {
-            disableLoading();
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.StudentNa)
             
-          
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
+            }
+           
           });
       }, 1000);
 
@@ -125,7 +173,7 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
 }
 
 
-  const googleError = () => alert('Google Sign Inn was unsuccessful. Try again later');
+  const googleError = () => swal("error", "Google Sign In was unsuccessful. Try again later" , "error");
   const getInputClasses = (fieldname) => {
     if (formik.touched[fieldname] && formik.errors[fieldname]) {
       return "is-invalid";
@@ -158,6 +206,10 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
             if (err.response.data.professorNA)
             {
               swal(err.response.data.professorNA, "please check your email" , "error");
+            }
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
             }
             disableLoading();
             setSubmitting(false);
@@ -259,17 +311,6 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
           >
             <FormattedMessage id="AUTH.GENERAL.FORGOT_BUTTON" />
           </Link>
-          <GoogleLogin
-            clientId="86559713029-sau39ta8lgackd248d1e7rcsebp6bssg.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <Button className={classes.googleButton,'px-9 py-4 my-3'} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">
-                Google Sign In
-              </Button>
-            )}
-            onSuccess={googleSuccess}
-            onFailure={googleError}
-            cookiePolicy={'single_host_origin'}
-          />
           <button
             id="kt_login_signin_submit"
             type="submit"
@@ -279,7 +320,36 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
             <span>Sign In</span>
             {loading && <span className="ml-3 spinner spinner-white"></span>}
           </button>
-        </div>
+          </div>
+          <div className="form-group d-flex flex-wrap flex-center">
+          
+          <GoogleLogin
+            clientId="86559713029-sau39ta8lgackd248d1e7rcsebp6bssg.apps.googleusercontent.com"
+            buttonText="Sign in with Gmail"
+            onSuccess={googleSuccess}
+            onFailure={googleError}
+            cookiePolicy={'single_host_origin'}
+            
+            
+          />
+          <LinkedIn
+          clientId="7859jafzhetbv8"
+          onFailure={handleFailure}
+          onSuccess={linkedinSuccess}
+          className="btn  font-weight-bold px-9 py-4 my-3 mx-4"
+          redirectUri="http://localhost:466/auth/linkedin"
+          scope="r_liteprofile,r_emailaddress"
+          
+        >
+          <img src={linkedin} alt="Log in with Linked In" style={{ maxWidth: '172.41px',height: '42.8px' }} />
+        </LinkedIn>
+        
+         
+         
+         </div>
+      
+       
+          
       </form>
       {/*end::Form*/}
     </div>

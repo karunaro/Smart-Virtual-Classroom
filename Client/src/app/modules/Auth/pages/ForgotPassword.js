@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { requestPassword } from "../_redux/authCrud";
+import swal from 'sweetalert';
 
 const initialValues = {
   email: "",
@@ -43,7 +44,8 @@ function ForgotPassword(props) {
     validationSchema: ForgotPasswordSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
       requestPassword(values.email)
-        .then(() => setIsRequested(true))
+      .then(({ data }) => {setIsRequested(true);
+        swal("An e-mail has been sent !", "check your spam or junk email folder ", "success")})
         .catch(() => {
           setIsRequested(false);
           setSubmitting(false);

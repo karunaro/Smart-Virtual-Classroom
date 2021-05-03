@@ -55,7 +55,7 @@ export function UserProfileDropdown() {
             {user.firstname}
           </span>
           <span className="symbol symbol-35">
-            <img src={userrr.image} alt="" />
+            <img src={userrr.image} alt="USER picture" />
           </span>
         </div>
       </Dropdown.Toggle>

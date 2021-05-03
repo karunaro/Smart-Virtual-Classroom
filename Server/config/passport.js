@@ -2,8 +2,10 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
+const LinkedInStrategy = require("passport-linkedin-oauth2").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-
+const LINKEDIN_KEY = process.env.linkedinClientID;
+const LINKEDIN_SECRET = process.env.linkedinClientSecret;
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.secretOrKey;

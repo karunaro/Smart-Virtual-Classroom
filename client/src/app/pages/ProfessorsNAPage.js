@@ -2,31 +2,20 @@
 import React, {useEffect, useState} from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../src/_metronic/_helpers";
+import Swal from 'sweetalert2'
 
-import ModalCreateAdmin from "./ModalCreateAdmin";
+
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import Swal from 'sweetalert2'
-import ReactSearchBox from 'react-search-box'
 
 
-export function AdminsPage({ className }) {
+export function ProfessorsNAPage({ className }) {
     const [groups,setgroup]= useState([])
-    const [searchText, setSearchText] = useState("")
+    const [searchText, setSearchText] = useState("");
     const [groupe,setgroupe]= useState([])
-  const  data = 
-      groups.map((group)=>
-        { return{
-          key: group.firstname,
-          value: group.email
-        }
-        })
-        
-      
-      console.log(data);
     useEffect(()=>console.log(groups),[groups])
     useEffect(()=>{
-        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/allAdmin`)
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/allprofessors`)
             .then(res => {
                 console.log(res.data)
                 setgroup(res.data)
@@ -35,43 +24,36 @@ export function AdminsPage({ className }) {
             .catch(err => {
                 console.log(err)})
     },[])
-    // function handleAffect(group)
-    // //affect student to class
-    // {axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/refuser`,{email:group.value}).then((data) => {  if(data.data )
-    //      setgroup((oldstate)=>   oldstate.filter(groups => groups.email != group.value));
-    //       console.log("groupe2");console.log(groups); 
-          
-    //       }).catch( (err) => console.log(err) )}
     function handleDelete(group)
     {
         Swal.fire({
-            title: 'Are you sure?',
-            text: 'you will delete  this admin',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33', 
-            confirmButtonText: 'Yes!'
-         }).then((result) => {
-            if(result.value){
-                axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/deleteuser`,{email:group.email}).then((data) => {  if(data.data )
-                    setgroup((oldstate)=>   oldstate.filter(groups => groups._id != group._id));
-                    setgroupe((oldstate)=>   oldstate.filter(groups => groups._id != group._id));
-                     console.log("groupe2");console.log(groups); Swal.fire(
-                        'success!',
-                        'You deleted  this Admin',
-                        'success'
-                      ); 
-                     }).catch( (err) => console.log(err) )
-           }
-         })
-     }
+        title: 'Are you sure?',
+        text: 'you will delete this Actif Professor',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33', 
+        confirmButtonText: 'Yes!'
+     }).then((result) => {
+        if(result.value){
+            axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/users/deleteuser`,{email:group.email}).then((data) => {  if(data.data )
+                setgroup((oldstate)=>   oldstate.filter(groups => groups._id != group._id));
+                setgroupe((oldstate)=>   oldstate.filter(groups => groups._id != group._id));
+                 console.log("groupe2");console.log(groups);
+                 Swal.fire(
+                    'success!',
+                    'You deleted  this Professor',
+                    'success'
+                  ); 
+                 }).catch( (err) => console.log(err) )
+       }
+     })
         
+        }
+          
    const history = useHistory();
-   
-    console.log(history.location.pathname.split('/')[2])
-    console.log("prof")
-    console.log(groups)
+    
+    
     const clear = () => {
         
         setSearchText("");
@@ -111,8 +93,6 @@ export function AdminsPage({ className }) {
               
             </div>
             {/* end::Header */}
-
-            {/* begin::Body */}
             <div className="container">
   <div className="row">
     <div className="col-4">
@@ -161,19 +141,10 @@ export function AdminsPage({ className }) {
               </div>
               </div>
 
+            {/* begin::Body */}
             <div className="card-body py-0">
                 {/* begin::Table */}
-                <ModalCreateAdmin  />
-                
                 <div className="table-responsive">
-                {/* <ReactSearchBox
-        placeholder="Placeholder"
-        value=""
-        data={data}
-        onSelect={(record)=> {if(window.confirm('Delete this Admins?')){handleAffect(record)}}  }
-        callback={record => console.log(record)}
-            /> */}
-                
                     <table
                         className="table table-head-custom table-vertical-center"
                         id="kt_advance_table_widget_1"
@@ -184,7 +155,7 @@ export function AdminsPage({ className }) {
 
                             </th>
                             <th className="pr-0" style={{ width: "50px" }}>
-                                Admins
+                                Professors
                             </th>
                             <th style={{ minWidth: "200px" }} />
                             <th style={{ minWidth: "150px" }}>Email</th>
@@ -205,7 +176,6 @@ export function AdminsPage({ className }) {
                     <span className="symbol symbol-35">
                         
                     <img src={group.image} alt="USER picture"className="h-75 align-self-end" />
-                     
                     </span>
                                 </div>
                             </td>
@@ -225,8 +195,7 @@ export function AdminsPage({ className }) {
                             </td>
                      
                             <td className="pr-0 text-right">
-                       
-                                
+                        
                       
                                 <a
                                     onClick={()=> {handleDelete(group)}  }

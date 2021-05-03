@@ -211,6 +211,7 @@ export function SearchDropdown() {
                     value={searchValue}
                     onChange={handleSearchChange}
                     className="form-control"
+                    style="height: 41 px"
                   />
 
                   <div
