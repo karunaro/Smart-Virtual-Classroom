@@ -14,6 +14,7 @@ import ModalAddGroup from '../../components/ModalAddGroup'
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import IconButton from '@material-ui/core/IconButton';
+import {useSelector} from "react-redux";
 const useStyles = makeStyles({
     card: {
         maxWidth: 345,
@@ -38,15 +39,18 @@ export function Allgroups({ className }) {
     },[])
     const classes = useStyles();
     const history = useHistory();
+    const result = useSelector(state => state.auth.user)
+    console.log(result.username)
     function handleDelete(groupid){
         axios.delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/groups/`+groupid)
             .then( () => {   setgroup( (oldstate) =>  oldstate.filter( groupe => groupe._id != groupid) ) } )
             .catch( (err) => console.log(err) )
     }
+    if (result.role === 'professor' || result.role === 'admin') {
     return (
         <>
-        <div className="d-flex justify-content-end"><ModalAddGroup
-            onChange={(newgroups) => setgroup(newgroups.data)} ></ModalAddGroup></div>
+        <div className="d-flex justify-content-end"><ModalAddGroup onChange={(newgroups)=>setgroup(newgroups.data)}
+             ></ModalAddGroup></div>
 <div className="row">
 
     {group.map( (group,index) =>
@@ -85,4 +89,43 @@ export function Allgroups({ className }) {
 </div>
             </>
     );
+}else {
+        return (
+
+            <>
+                <div className="d-flex justify-content-end"><ModalAddGroup onChange={(newgroups)=>setgroup(newgroups.data)}
+                ></ModalAddGroup></div>
+                <div className="row">
+
+                    {group.map( (group,index) =>
+                        <Card key={index} className={classes.card}>
+                            <CardActionArea>
+                                <CardMedia
+                                    className={classes.media}
+                                    image="https://image.freepik.com/free-vector/group-young-students-flat-style-illustration-isolated-white_180264-19.jpg"
+                                    title="Contemplative Reptile"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        {group.name}
+                                    </Typography>
+                                    <Typography variant="body2"   color="textSecondary" component="p">
+                                        {group.description}
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                            <CardActions className="d-flex justify-content-end">
+                                <Button onClick={()=>(history.push('/group/' + group._id))}  size="lg" color="primary" >
+                                    Details
+                                </Button>
+
+
+
+
+
+                            </CardActions>
+                        </Card>)}
+                </div>
+            </>
+        );}
 }

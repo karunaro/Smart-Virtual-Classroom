@@ -5,6 +5,7 @@ import { toAbsoluteUrl } from "../../../src/_metronic/_helpers";
 
 import ModalProject from '../../components/ModalProject'
 import axios from "axios";
+import ModalAddProject from '../../components/ModalAddProject'
 
 export function ProjectsPage({ className }) {
     const [project,setproject]= useState([])
@@ -42,7 +43,7 @@ export function ProjectsPage({ className }) {
           </span>
                     </h3>
                     <div className="card-toolbar">
-
+                        <ModalAddProject projectid={1} onChange={(newprojects) => setproject(newprojects.data)}  ></ModalAddProject>
 
 
 
@@ -67,7 +68,7 @@ export function ProjectsPage({ className }) {
                                     Projects
                                 </th>
                                 <th style={{ minWidth: "200px" }} />
-                                <th style={{ minWidth: "150px" }}>Title</th>
+
                                 <th style={{ minWidth: "150px" }}>Topic</th>
                                 <th className="pr-0 text-right" style={{ minWidth: "150px" }}>
                                     action
@@ -94,14 +95,7 @@ export function ProjectsPage({ className }) {
                                     </td>
                                     <td className="pl-0">
                          </td>
-                                    <td>
-                  <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
-                   Group Module
-                  </span>
-                                        <span className="text-muted font-weight-bold">
-                    Front
-                  </span>
-                                    </td>
+
                                     <td>
                                          <span className="text-dark-75 font-weight-bolder d-block font-size-lg">
                   {project.topic}

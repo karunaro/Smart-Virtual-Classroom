@@ -14,7 +14,10 @@ import { QuestionsPage } from "./pages/QuestionsPage";
 import { Allgroups } from "./pages/Allgroups";
 import { ProjectsPage } from "./pages/ProjectsPage";
 import { ProfessorsPage } from "./pages/ProfessorsPage";
+import { ProfessorsNAPage } from "./pages/ProfessorsNAPage";
 import { AdminsPage } from "./pages/AdminsPage";
+import { Students } from "./pages/Students";
+import  Contact  from "./pages/Contact";
 import { useSelector } from "react-redux";
 
 import ListCLassesGroup from "../components/ListCLassesGroup";
@@ -42,13 +45,15 @@ export default function BasePage() {
       <Switch>
         {
           /* Redirect from root URL to /dashboard. */
-          <Redirect exact from="/" to="/dashboard" />
+          <Redirect exact from="/" to="/classesGroupe" />
         }
         {user.role === "admin" ? (
           <Switch>
             <ContentRoute path="/professors" component={ProfessorsPage} />
+            <ContentRoute path="/professorsA" component={ProfessorsNAPage} />
 
             <ContentRoute path="/admins" component={AdminsPage} />
+            <ContentRoute path="/students" component={Students} />
 
             <ContentRoute path="/classesGroupe" component={ListCLassesGroup} />
             <ContentRoute path="/classes" component={ListCLasses} />
@@ -56,10 +61,12 @@ export default function BasePage() {
             <ContentRoute path="/insideClass" component={insideClass} />
             <ContentRoute path="/listCourses" component={insideClass} />
             <ContentRoute path="/DetailCourses" component={insideClass} />
+            <ContentRoute path="/contact" component={Contact} />
           </Switch>
         ) : (
           <Switch>
             <ContentRoute path="/dashboard" component={DashboardPage} />
+            <ContentRoute path="/contact" component={Contact} />
             <ContentRoute path="/builder" component={BuilderPage} />
             <ContentRoute path="/my-page" component={MyPage} />
             <ContentRoute path="/Meetopia" component={MeetopiaPage} />
@@ -79,7 +86,6 @@ export default function BasePage() {
             <ContentRoute path="/listCourses" component={insideClass} />
             <ContentRoute path="/DetailCourses" component={insideClass} />
             <ContentRoute path="/sections" component={ListSections} />
-
             <Route path="/google-material" component={GoogleMaterialPage} />
           </Switch>
         )}

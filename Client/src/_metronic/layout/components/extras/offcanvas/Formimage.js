@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import axios from "axios";
-import swal from 'sweetalert';
 
 import { Button, Form } from "react-bootstrap";
 
@@ -37,8 +36,6 @@ function FormImage() {
      userrr.image=result.data.image;
      console.log(userrr.image);
      localStorage.setItem("user", JSON.stringify(userrr));
-     swal("success!", "you change your image with success", "success");
-
     });
   };
 

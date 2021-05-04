@@ -46,7 +46,6 @@ export function GroupPage({ className }) {
                         <div className="card-toolbar">
                             <ProjectsDisplay></ProjectsDisplay>
                             <ModalAffectValidations></ModalAffectValidations>
-                            <ValidationsDisplay></ValidationsDisplay>
                             <ModalGroup>
             <span className="svg-icon svg-icon-md svg-icon-white">
               <SVG

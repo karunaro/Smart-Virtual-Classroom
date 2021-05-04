@@ -9,6 +9,7 @@ import RegistrationProf from "./RegistrationProf";
 import ForgotPassword from "./ForgotPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
 import ResetPw from "./ResetPw";
+import { LinkedInPopUp } from 'react-linkedin-login-oauth2';
 
 
 export function AuthPage() {
@@ -86,6 +87,10 @@ export function AuthPage() {
                   <ContentRoute
                     path="/auth/reset"
                     component={ResetPw}
+                />
+                   <ContentRoute
+                    path="/auth/linkedin"
+                    component={LinkedInPopUp}
                 />
                 <Redirect from="/auth" exact={true} to="/auth/login"/>
                 <Redirect to="/auth/login"/>

@@ -77,8 +77,13 @@ export default function ProjectsDisplay() {
                 <List>
                     {group.projects.map( (project,index) =>
                     <ListItem button key={index}>
-                        <ListItemText primary={project.title} secondary={project.topic} />
+
+                        <ListItemText   primary={project.title} secondary={project.topic} />
+                        <Typography onClick={()=>(history.push('/my-page/' + project._id))}  variant="colorPrimary" className={classes.title}>
+                            Access TaskBoard of {project.title}
+                        </Typography>
                     </ListItem>
+
                )}
 
                 </List>

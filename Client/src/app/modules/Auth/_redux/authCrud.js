@@ -36,6 +36,10 @@ export function loginGmail(tokenId) {
   
   return axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/google_login", { tokenId });
 }
+export function loginlinkedin(tokenId) {
+  
+  return axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/linkedin_login", { tokenId });
+}
 export function reset(token,password) {
   return axios.post(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT + "/users/reset", { token,password });
 }

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export function FooterCompact({
   today,
   footerClasses,
@@ -23,12 +23,10 @@ export function FooterCompact({
             </span>
             {` `}
             <a
-              href="http://keenthemes.com/metronic"
-              rel="noopener noreferrer"
-              target="_blank"
+              
               className="text-dark-75 text-hover-primary"
             >
-              Keenthemes
+              Edutopia
             </a>
           </div>
           {/* end::Copyright */}
@@ -51,14 +49,16 @@ export function FooterCompact({
             >
               Team
             </a>
-            <a
-              href="http://keenthemes.com/metronic"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link pl-3 pr-0"
-            >
+            <Link to="/contact" 
+              
+              className="nav-link pl-3 pr-0">
+            
+              
+              
+            
               Contact
-            </a>
+            
+            </Link>
           </div>
           {/* end::Nav */}
         </div>

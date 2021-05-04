@@ -9,6 +9,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import axios from 'axios';
+import {useHistory} from "react-router-dom";
+import ModalAddTask from "./ModalAddTask"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,17 +38,7 @@ function intersection(a, b) {
 }
 
 export default function TaskBoard() {
-    useEffect(()=>console.log(tasks),[tasks])
-    useEffect(()=>{
-        axios.get(`http://localhost:444/project/taskstodo/6062f6a15f57ea40a4c238d3`)
-            .then(res => {
-                console.log(res)
-                settasks(res.data)
-            })
-            .catch(err => {
-                console.log(err)})
-    },[])
-
+    const [tasks,settasks]= useState([])
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState([tasks]);
@@ -55,7 +47,38 @@ export default function TaskBoard() {
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
     const centerChecked = intersection(checked, center);
-    const [tasks,settasks]= useState([])
+    const history = useHistory();
+    useEffect(()=>console.log(tasks),[tasks])
+    useEffect(()=>{
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/project/taskstodo/`+history.location.pathname.split('/')[2])
+            .then(res => {
+                console.log(res)
+                setLeft(res.data)
+            })
+            .catch(err => {
+                console.log(err)})
+    },[])
+    useEffect(()=>{
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/project/tasksdoing/`+history.location.pathname.split('/')[2])
+            .then(res => {
+                console.log(res)
+                setCenter(res.data)
+            })
+            .catch(err => {
+                console.log(err)})
+    },[])
+    useEffect(()=>{
+        axios.get(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/project/tasksdone/`+history.location.pathname.split('/')[2])
+            .then(res => {
+                console.log(res)
+                setRight(res.data)
+            })
+            .catch(err => {
+                console.log(err)})
+    },[])
+
+
+    console.log(left)
 
 
     const handleToggle = value => () => {
@@ -73,44 +96,55 @@ export default function TaskBoard() {
 
     const handleAllCenter = () => {
         setCenter(center.concat(left));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/alltodo_doing/'+history.location.pathname.split('/')[2]);
         setLeft([]);
     };
     const handleAllRight = () => {
         setRight(right.concat(center));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/alldoing_done/'+history.location.pathname.split('/')[2]);
         setCenter([]);
     };
 
-    const handleCheckedRight = () => {
-        setRight(right.concat(centerChecked));
-        setCenter(not(center, centerChecked));
-        setChecked(not(checked, centerChecked));
-    };
+
+
 
     const handleCheckedCenter = () => {
         setCenter(center.concat(leftChecked));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/todo_todoing/'+history.location.pathname.split('/')[2]+'/'+leftChecked[0]);
         setLeft(not(left, leftChecked));
         setChecked(not(checked, leftChecked));
     };
+    const handleCheckedRight = () => {
+        setRight(right.concat(centerChecked));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/doing_todone/'+history.location.pathname.split('/')[2]+'/'+centerChecked[0]);
+        setCenter(not(center, centerChecked));
+        setChecked(not(checked, centerChecked));
+    };
     const handleCheckedLeft = () => {
         setLeft(left.concat(centerChecked));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/doing_todo/'+history.location.pathname.split('/')[2]+'/'+centerChecked[0]);
         setCenter(not(center, centerChecked));
         setChecked(not(checked, centerChecked));
     };
     const handleCheckedCenterReverse = () => {
         setCenter(center.concat(rightChecked));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/done_todoing/'+history.location.pathname.split('/')[2]+'/'+rightChecked[0]);
         setRight(not(right, rightChecked));
         setChecked(not(checked, rightChecked));
     };
     const handleAllCenterReverse = () => {
         setCenter(center.concat(right));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/alldone_doing/'+history.location.pathname.split('/')[2]);
         setRight([]);
     };
     const handleAllleft = () => {
         setLeft(left.concat(center));
+        axios.put(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+'/project/alldoing_todo/'+history.location.pathname.split('/')[2]);
         setCenter([]);
     };
 
     const customList = tasks => (
+
         <>
 
         <Paper className={classes.paper}>
@@ -134,7 +168,7 @@ export default function TaskBoard() {
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId}  primary={` "task : "${value }`} />
+                            <ListItemText id={labelId}  primary={` ${value }`} />
                         </ListItem>
 
                     );
@@ -147,7 +181,8 @@ export default function TaskBoard() {
 
     return (
         <>
-
+         <label>        </label>   <ModalAddTask projectid={history.location.pathname.split('/')[2]}
+                                                 onChange={(newtasks) => setLeft((newtasks.data))} ></ModalAddTask>
 
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
             <Grid item>{customList(left)}</Grid>

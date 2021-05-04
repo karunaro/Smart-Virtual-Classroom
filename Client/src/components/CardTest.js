@@ -9,7 +9,6 @@ import {
   DropdownMenu4,
 } from "../_metronic/_partials/dropdowns";
 import DropdownSeanceActions from "./CreateSeance/DropdownSeanceActions";
-import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 
 export function CardTest({ className }) {
   return (
@@ -29,6 +28,7 @@ export function CardTest({ className }) {
               className="font-weight-bold text-dark-100 text-hover-primary font-size-lg mb-1"
             ></a>
             {localStorage.getItem("seanceName")}
+            <span className="text-muted font-weight-bold">Due in 2 Days</span>
           </div>
 
           <div className="card-toolbar">

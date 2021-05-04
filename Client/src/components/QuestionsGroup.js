@@ -17,6 +17,9 @@ import Button from '@material-ui/core/Button';
 import ModalAddQuestion from '../components/ModalAddQuestion';
 import ReactTimeAgo from "react-time-ago/commonjs/ReactTimeAgo";
 import {useSelector} from "react-redux";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import CardActions from "@material-ui/core/CardActions";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,7 +61,11 @@ export default function  QuestionsGroup () {
     //const history = useHistory();
     // console.log(history.location.pathname.split('/')[2])
     const [anchorEl, setAnchorEl] = React.useState(null);
-
+    function handleDelete(questionid){
+        axios.delete(process.env.REACT_APP_BACKEND_PROTOCOL + process.env.REACT_APP_BACKEND_IP + ':' + process.env.REACT_APP_BACKEND_PORT+`/questions/`+questionid)
+            .then( () => {   setquestion( (oldstate) =>  oldstate.filter( qst => qst._id != questionid) ) } )
+            .catch( (err) => console.log(err) )
+    }
     function handleClick(event) {
         setAnchorEl(event.currentTarget);
 
@@ -74,7 +81,8 @@ export default function  QuestionsGroup () {
     if (result.role === 'professor' || result.role === 'admin') {
         return (
             <>
-                
+                <div className="d-flex justify-content-end"><ModalAddQuestion
+                    onChange={(newquestions) => setquestion(newquestions.data)} userid={1}></ModalAddQuestion></div>
                 <List className={classes.root}>
 
                     {questions.map((question, index) =>
@@ -82,6 +90,7 @@ export default function  QuestionsGroup () {
                             <ListItemAvatar>
                                 <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg"/>
                             </ListItemAvatar>
+
                             <ListItemText
                                 primary={ "The Question :" + question.question}
                                 secondary={
@@ -108,6 +117,9 @@ export default function  QuestionsGroup () {
                                                            ...oldstate[index],
                                                            question: oldstate[index].answer = answer
                                                        }, ...oldstate].slice(1))}></AddAnswer>
+                                            <IconButton aria-label="Delete" className={classes.margin}>
+                                                <DeleteIcon onClick={ () => handleDelete(question._id) } fontSize="large" />
+                                            </IconButton>
 
                                         </div>
                                     </React.Fragment>
@@ -115,8 +127,10 @@ export default function  QuestionsGroup () {
                             />
 
 
-                        </ListItem>)}
-                    <Divider variant="inset" component="li"/>
+                        </ListItem>
+
+                        )}
+
                 </List>
 
             </>

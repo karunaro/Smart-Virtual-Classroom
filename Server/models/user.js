@@ -12,7 +12,7 @@ const UserSchema = new Schema({
   },
   image: {
     type: String,
-    default:"http://localhost:444/uploads/1618892167093-clipartkey_1520367.png"
+    default:null
   } 
 });
 module.exports = User = mongoose.model("users", UserSchema);

@@ -172,10 +172,38 @@ export function HeaderMenu({ layoutProps }) {
             </NavLink>
           </li>
           <li
+            data-menu-toggle={layoutProps.menuDesktopToggle}
+            aria-haspopup="true"
+            className={`menu-item menu-item-submenu menu-item-rel ${getMenuItemActive(
+              "/MyQuizzes"
+            )}`}
+          >
+            <NavLink className="menu-link menu-toggle" to="/MyQuizzes">
+              <span className="menu-text">Professors</span>
+              <i className="menu-arrow"></i>
+            </NavLink>
+            <div className="menu-submenu menu-submenu-classic menu-submenu-left">
+              <ul className="menu-subnav">
+              <li className={`menu-item ${getMenuItemActive("/ProfessorsA")}`}>
+                  <NavLink className="menu-link" to="/ProfessorsA">
+                    <span className="menu-text">Approved Professors</span>
+                  </NavLink>
+                </li>
+                <li className={`menu-item ${getMenuItemActive("/Professors")}`}>
+                  <NavLink className="menu-link" to="/Professors">
+                    <span className="menu-text">Request List</span>
+                  </NavLink>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+          
+          <li
             className={`menu-item menu-item-rel ${getMenuItemActive("/group")}`}
           >
-            <NavLink className="menu-link" to="/Professors">
-              <span className="menu-text">Professors</span>
+            <NavLink className="menu-link" to="/students">
+              <span className="menu-text">Students</span>
               {layoutProps.rootArrowEnabled && <i className="menu-arrow" />}
             </NavLink>
           </li>
