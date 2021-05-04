@@ -40,7 +40,7 @@ export default function AddMembersModal() {
 
   return (
     <>
-      <Button onClick={handleClickOpen} variant="warning">
+      <Button onClick={handleClickOpen} variant="primary">
         Students List
       </Button>
       <Dialog

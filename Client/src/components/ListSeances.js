@@ -85,7 +85,6 @@ function ListSeances() {
                 ></a>
                 {c.name}
                 <span className="text-muted font-weight-bold">
-                  Modified in{" "}
                   <ReactTimeAgo date={c.dateCreation} locale="en-US" />
                 </span>
               </div>

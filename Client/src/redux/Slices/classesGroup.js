@@ -40,7 +40,7 @@ export const getAllProfessors = createAsyncThunk(
         process.env.REACT_APP_BACKEND_IP +
         ":" +
         process.env.REACT_APP_BACKEND_PORT +
-        "/users/allprofessor"
+        "/users/allprofessors"
     );
 
     return data;
