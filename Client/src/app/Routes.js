@@ -10,7 +10,7 @@ import { Redirect, Switch, Route } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
 import {Layout} from "../_metronic/layout";
 import BasePage from "./BasePage";
-import { Logout, AuthPage } from "./modules/Auth";
+import { Logout, FirstPage, AuthPage } from "./modules/Auth";
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage";
 
 export function Routes() {
@@ -28,6 +28,7 @@ export function Routes() {
                 <Route>
                     <AuthPage />
                 </Route>
+                
             ) : (
                 /*Otherwise redirect to root page (`/`)*/
                 <Redirect from="/auth" to="/"/>

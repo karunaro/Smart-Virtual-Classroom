@@ -8,24 +8,36 @@ export const MyPage = () => {
   return (<>My Page</>);
 };
 */
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import QuestionsGroup from '../../components/QuestionsGroup';
+
 import TaskBoard from '../../components/TaskBoard';
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
+    marginTop:100,
   },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
+  Todo: {
+    fontSize: theme.typography.pxToRem(55),
     flexBasis: '33.33%',
     flexShrink: 0,
+    color : "aqua",
+    paddingInline: 100,
+  },
+  Doing: {
+    fontSize: theme.typography.pxToRem(55),
+    flexBasis: '33.33%',
+    flexShrink: 0,
+    color : "aqua",
+    paddingInline: 500,
+  },
+  Done: {
+    fontSize: theme.typography.pxToRem(20),
+    flexBasis: '33.33%',
+    flexShrink: 0,
+    color : "aqua",
+    paddingInline: 1050,
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -35,87 +47,23 @@ const useStyles = makeStyles(theme => ({
 
 export  function MyPage() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
 
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const mystyle = {
+    color: "blue",
+    fontSize : 30  ,
+    fontFamily: "cursive"
   };
+  const [count, setCount] = useState(0);
 
   return (
       <div className={classes.root}>
-        <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-          >
-            <Typography className={classes.heading}>General settings</Typography>
-            <Typography className={classes.secondaryHeading}>I am an expansion panel</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-              maximus est, id dignissim quam.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-          <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel2bh-content"
-              id="panel2bh-header"
-          >
-            <Typography className={classes.heading}>Users</Typography>
-            <Typography className={classes.secondaryHeading}>
-              You are currently not an owner
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-              diam eros in elit. Pellentesque convallis laoreet laoreet.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-          <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel3bh-content"
-              id="panel3bh-header"
-          >
-            <Typography className={classes.heading}>Advanced settings</Typography>
-            <Typography className={classes.secondaryHeading}>
-              Filtering has been entirely disabled for whole web server
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-              vitae egestas augue. Duis vel est augue.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-          <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel4bh-content"
-              id="panel4bh-header"
-          >
-            <Typography className={classes.heading}>Personal data</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-              vitae egestas augue. Duis vel est augue.
-            </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <h1>as2la mt3 students w fazet</h1>
-        <QuestionsGroup> </QuestionsGroup>
-        <h1> taskboard </h1>
-        <label> jahajk</label>
-
-        <TaskBoard> </TaskBoard>
+        <br/>
+        <div className="d-flex justify-content-around">
+          <div style={mystyle }>To Do</div>
+          <div style={mystyle } >Doing</div>
+          <div style={mystyle }>Done</div>
+        </div>
+        <TaskBoard questions={  count}> </TaskBoard>
       </div>
   );
 }

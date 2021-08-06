@@ -10,6 +10,14 @@ import { Routes } from "../app/Routes";
 import { I18nProvider } from "../_metronic/i18n";
 import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
 
+import en from "javascript-time-ago/locale/en";
+import ru from "javascript-time-ago/locale/ru";
+
+import TimeAgo from "javascript-time-ago";
+
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(ru);
+
 export default function App({ store, persistor, basename }) {
   return (
     /* Provide Redux store */

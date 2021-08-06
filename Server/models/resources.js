@@ -6,4 +6,4 @@ const ResourcesSchema = new Schema({
   src: { type: String, required: true },
   type: { type: String, required: true }
 });
-module.exports = ResourcesSchema = mongoose.model("resources", ResourcesSchema);
+module.exports = Resources = mongoose.model("resources", ResourcesSchema);

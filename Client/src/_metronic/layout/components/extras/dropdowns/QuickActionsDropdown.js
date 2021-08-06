@@ -8,10 +8,17 @@ import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
+import CreateClassesGroup from "../../../../../components/CreateClassesGroup/CreateClassesGroup";
+import CreateClass from "../../../../../components/CreateClass/CreateClass";
+import CreateSeance from "../../../../../components/CreateSeance/CreateSeance";
+import CreateCourses from "../../../../../components/CreateCourses/CreateCourses";
+import AddSectionModal from "../../../../../components/SectionsManagement/AddSectionModal";
+import { ViewInacceptedClass } from "../../../../../components/AddMembers/ViewInacceptedClass";
 
 export function QuickActionsDropdown() {
   const bgImage = toAbsoluteUrl("/media/misc/bg-2.jpg");
   const uiService = useHtmlClassService();
+  const userConnected = JSON.parse(localStorage.getItem("user"));
   const layoutProps = useMemo(() => {
     return {
       offcanvas:
@@ -34,7 +41,10 @@ export function QuickActionsDropdown() {
             >
               <span className="svg-icon svg-icon-xl svg-icon-primary">
                 <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/Media/Equalizer.svg")}
+                  src={
+                    process.env.PUBLIC_URL +
+                    "/media/svg/icons/Files/File-plus.svg"
+                  }
                 />
               </span>
             </div>
@@ -50,13 +60,16 @@ export function QuickActionsDropdown() {
             <OverlayTrigger
               placement="bottom"
               overlay={
-                <Tooltip id="quick-actions-tooltip">Quick actions</Tooltip>
+                <Tooltip id="quick-actions-tooltip">Class Management</Tooltip>
               }
             >
               <div className="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
                 <span className="svg-icon svg-icon-xl">
                   <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/Media/Equalizer.svg")}
+                    src={
+                      process.env.PUBLIC_URL +
+                      "/media/svg/icons/Files/File-plus.svg"
+                    }
                   />
                 </span>
               </div>
@@ -71,99 +84,29 @@ export function QuickActionsDropdown() {
                 style={{ backgroundImage: `url(${bgImage})` }}
               >
                 <h3 className="text-white font-weight-bold font-size-5">
-                  Quick Actions
+                  Class Management
                 </h3>
-                <span className="btn btn-success btn-sm btn-bold btn-font-md mt-2">
-                  23 tasks pending
-                </span>
               </div>
               {/* end: Head */}
 
               <div className="row row-paddingless">
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-right border-bottom"
-                  >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Shopping/Euro.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Accounting
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      eCommerce
-                    </span>
-                  </a>
-                </div>
+                {userConnected.role === "admin" ? (
+                  <>
+                    <CreateClassesGroup></CreateClassesGroup>
+                    <CreateClass></CreateClass>
+                    <AddSectionModal></AddSectionModal>
+                  </>
+                ) : userConnected.role === "professor" ? (
+                  <>
+                    <CreateSeance></CreateSeance>
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-bottom"
-                  >
-                    {" "}
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Communication/Mail-attachment.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Administration
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Console
-                    </span>
-                  </a>
-                </div>
-
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light border-right"
-                  >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Shopping/Box2.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Projects
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Pending Tasks
-                    </span>
-                  </a>
-                </div>
-
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="d-block py-10 px-5 text-center bg-hover-light"
-                  >
-                    <span className="svg-icon svg-icon-3x svg-icon-success">
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Communication/Group.svg"
-                        )}
-                      ></SVG>
-                    </span>
-                    <span className="d-block text-dark-75 font-weight-bold font-size-h6 mt-2 mb-1">
-                      Customers
-                    </span>
-                    <span className="d-block text-dark-50 font-size-lg">
-                      Latest cases
-                    </span>
-                  </a>
-                </div>
+                    <CreateCourses></CreateCourses>
+                  </>
+                ) : (
+                  <>
+                    <ViewInacceptedClass></ViewInacceptedClass>
+                  </>
+                )}
               </div>
             </form>
           </Dropdown.Menu>

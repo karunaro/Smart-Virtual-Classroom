@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import {  Button,TextField,Input, InputAdornment, IconButton } from '@material-ui/core';
 import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
-import { login } from "../_redux/authCrud";
+import { login,loginGmail,loginlinkedin } from "../_redux/authCrud";
+import {GoogleLogin} from 'react-google-login';
+import Icon from './icon';
+import useStyles from './style';
+import swal from 'sweetalert';
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { LinkedIn } from 'react-linkedin-login-oauth2';
+import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png'
+
 
 /*
   INTL (i18n) docs:
@@ -15,15 +25,26 @@ import { login } from "../_redux/authCrud";
 /*
   Formik+YUP:
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-*/
+*/ 
 
 const initialValues = {
-  email: "admin@demo.com",
-  password: "demo",
+  email: "",
+  password: "",
+};
+const initialState = {
+  email: '',
+  password: '',
+  err: '',
+  success: ''
 };
 
 function Login(props) {
   const { intl } = props;
+  //const [user, setUser] = useState(initialState)
+  //const dispatch = useDispatch();
+  //const history = useHistory();
+  const classes = useStyles();
+ 
   const [loading, setLoading] = useState(false);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -36,7 +57,7 @@ function Login(props) {
         })
       ),
     password: Yup.string()
-      .min(3, "Minimum 3 symbols")
+      .min(7, "Minimum 8 symbols")
       .max(50, "Maximum 50 symbols")
       .required(
         intl.formatMessage({
@@ -44,6 +65,9 @@ function Login(props) {
         })
       ),
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const enableLoading = () => {
     setLoading(true);
@@ -52,7 +76,104 @@ function Login(props) {
   const disableLoading = () => {
     setLoading(false);
   };
+  // const googleSuccess = async (res) => {
+  //   console.log(res);
+  //   const result = res?.profileObj;
+  //   console.log(result);
+  //   console.log("ddd"+result.email+result.givenName+result.familyName);
+  //   const token = res?.tokenId;
 
+  //   try {
+  //     dispatch({ type: props, data: { result, token } });
+  //     console.log("ddd"+token )
+  //     const decodeToken= decode(token);
+  //     console.log("decode   "+decodeToken);
+  //     props.login(token)
+  //     history.push('/');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+ const handleSuccess = (data) => {
+    console.log(data)
+  }
+  const linkedinSuccess = async (response) => {
+    console.log(response)
+    try {
+      const tokenId= response.code
+      console.log(tokenId)
+      
+        loginlinkedin(tokenId)
+          
+            .then(({ data: {token} }) => { 
+            console.log("googleres") 
+            localStorage.setItem("jwtToken", token);
+            console.log(token);
+            disableLoading();
+            props.login(token);
+            console.log("vv");
+           
+          })
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.StudentNa)
+            
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
+            }
+           
+          });
+     
+
+        
+    } catch (err) {
+        
+         
+        swal("error", "Linkedin Sign In was unsuccessful. Try again later" , "error");
+    }
+}
+
+ const  handleFailure = (error) => {
+  console.log(error)
+  }
+  const googleSuccess = async (response) => {
+    console.log(response)
+    try {
+      const tokenId= response.tokenId
+      console.log(tokenId)
+      setTimeout(() => {
+        loginGmail(tokenId)
+          .then(({ data: {token} }) => { 
+            console.log("googleres") 
+            localStorage.setItem("jwtToken", token);
+            console.log(token);
+            disableLoading();
+            props.login(token);
+            console.log("vv");
+          })
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.StudentNa)
+            
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
+            }
+           
+          });
+      }, 1000);
+
+        
+    } catch (err) {
+        
+         
+        swal("error", "Google Sign In was unsuccessful. Try again later" , "error");
+    }
+}
+
+
+  const googleError = () => swal("error", "Google Sign In was unsuccessful. Try again later" , "error");
   const getInputClasses = (fieldname) => {
     if (formik.touched[fieldname] && formik.errors[fieldname]) {
       return "is-invalid";
@@ -72,11 +193,24 @@ function Login(props) {
       enableLoading();
       setTimeout(() => {
         login(values.email, values.password)
-          .then(({ data: { accessToken } }) => {
+          .then(({ data: { token } }) => {
+            console.log(token);
+            localStorage.setItem("jwtToken", token);
             disableLoading();
-            props.login(accessToken);
+            props.login(token);
+            console.log("vv");
           })
-          .catch(() => {
+          .catch(err => {
+            console.log(err.response)
+            console.log(err.response.data.professorNA)
+            if (err.response.data.professorNA)
+            {
+              swal(err.response.data.professorNA, "please check your email" , "error");
+            }
+            if (err.response.data.StudentNa)
+            {
+              swal(err.response.data.StudentNa, "please check your email" , "error");
+            }
             disableLoading();
             setSubmitting(false);
             setStatus(
@@ -114,8 +248,8 @@ function Login(props) {
         ) : (
           <div className="mb-10 alert alert-custom alert-light-info alert-dismissible">
             <div className="alert-text ">
-              Use account <strong>admin@demo.com</strong> and password{" "}
-              <strong>demo</strong> to continue.
+              Use your account 
+               to continue.
             </div>
           </div>
         )}
@@ -137,14 +271,31 @@ function Login(props) {
           ) : null}
         </div>
         <div className="form-group fv-plugins-icon-container">
-          <input
+          <TextField 
+          
             placeholder="Password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            
             className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
               "password"
             )}`}
             name="password"
             {...formik.getFieldProps("password")}
+            InputProps={
+              { // <-- This is where the toggle button is added.
+                disableUnderline: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
           {formik.touched.password && formik.errors.password ? (
             <div className="fv-plugins-message-container">
@@ -169,7 +320,36 @@ function Login(props) {
             <span>Sign In</span>
             {loading && <span className="ml-3 spinner spinner-white"></span>}
           </button>
-        </div>
+          </div>
+          <div className="form-group d-flex flex-wrap flex-center">
+          
+          <GoogleLogin
+            clientId="86559713029-sau39ta8lgackd248d1e7rcsebp6bssg.apps.googleusercontent.com"
+            buttonText="Sign in with Gmail"
+            onSuccess={googleSuccess}
+            onFailure={googleError}
+            cookiePolicy={'single_host_origin'}
+            
+            
+          />
+          <LinkedIn
+          clientId="7859jafzhetbv8"
+          onFailure={handleFailure}
+          onSuccess={linkedinSuccess}
+          className="btn  font-weight-bold px-9 py-4 my-3 mx-4"
+          redirectUri="http://localhost:466/auth/linkedin"
+          scope="r_liteprofile,r_emailaddress"
+          
+        >
+          <img src={linkedin} alt="Log in with Linked In" style={{ maxWidth: '172.41px',height: '42.8px' }} />
+        </LinkedIn>
+        
+         
+         
+         </div>
+      
+       
+          
       </form>
       {/*end::Form*/}
     </div>
